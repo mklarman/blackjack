@@ -44,11 +44,34 @@ function getDeck(){
 	return deck;
 }
 
+function getCard(){
+	card = deck.pop()
+	deck.splice(-1, card)
+	return card
+	console.log(deck.length)
+	
+}
+
+function updateDeck(){
+	--deck.length
+}
+
+function dealer(){
+	while(players[0].hand.length<2){
+		players[0].hand.push(getCard())
+		updateDeck()
+	}
+}
+function player(){
+		while(players[1].hand.length<2){
+		players[1].hand.push(getCard())
+		updateDeck()
+	}
+}
+
 function deal(){
-	// remove top card from deck
-	var card = deck[deck.length-1];
-	deck.splice(deck.length-1, 1);
-	return card;
+	dealer()
+	player()
 }
 
 function shuffle(){
@@ -83,21 +106,22 @@ function renderDeck(){
 	}
 }
 
-function dealHands()
-    {
+
+
+function dealHands(){
         // alternate handing cards to each player
         // 2 cards each
         for(var i = 0; i < 2; i++)
         {
-            for (var x = 0; x < players.length; x++)
-            {
-                var card = deck.pop();
-                players[x].Hand.push(card);
-                renderCard(card, x);
-                updatePoints();
+            for (var x = 0; x < players.length; x++){
+                var card = deck[deck.length-1];
+                players[x].hand.push(card);
+                deck.splice(deck.length-1, 1);
+                console.log(deck)
+                // renderCard(card, x);
+                // updatePoints();
             }
         }
 
-        updateDeck();
     }
 
