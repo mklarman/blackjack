@@ -11,14 +11,16 @@ var players = []
 
 function createPlayers(num){
 	hand = []
-	for(i=0; i<=num; i++){
+	hand1 = []
+	for(i=1; i<=num; i++){
 		var player = {name: "player" + i, hand: hand, score: 0}
 		players.push(player)
-		if(player.name == "player0"){
+		if(player.name == "player1"){
 			player.name = "Dealer"
 		}
-		if(player.name == "player1"){
+		if(player.name == "player2"){
 			player.name = "Me"
+			player.hand = hand1
 		}
 	}
 	return players
@@ -44,35 +46,20 @@ function getDeck(){
 	return deck;
 }
 
-function getCard(){
-	card = deck.pop()
-	deck.splice(-1, card)
-	return card
-	console.log(deck.length)
-	
-}
-
-function updateDeck(){
-	--deck.length
-}
-
-function dealer(){
-	while(players[0].hand.length<2){
-		players[0].hand.push(getCard())
-		updateDeck()
-	}
-}
-function player(){
-		while(players[1].hand.length<2){
-		players[1].hand.push(getCard())
-		updateDeck()
-	}
-}
 
 function deal(){
-	dealer()
-	player()
+	card1 = deck.pop()
+	card2 = deck.pop()
+	card3 = deck.pop()
+	card4 = deck.pop()
+
+	players[0].hand.push(card1)
+	players[0].hand.push(card2)
+	players[1].hand.push(card3)
+	players[1].hand.push(card4)
 }
+
+
 
 function shuffle(){
 	
@@ -85,6 +72,7 @@ function shuffle(){
 		deck[location1] = deck[location2];
 		deck[location2] = tmp;
 	}
+	
 }
 
 function renderDeck(){
@@ -106,22 +94,70 @@ function renderDeck(){
 	}
 }
 
+// function cardsOne(){
+// 	card1 = deck.pop()
+// 	card2 = deck.pop()
+// 	players[0].hand.push(card1)
+// 	players[0].hand.push(card2)
+// }
+// function dealMe(){
+// 	card1 = deck.pop()
+// 	card2 = deck.pop()
+// 	card3 = deck.pop()
+// 	card4 = deck.pop()
+// 	players[1].hand.push(card3)
+// 	players[1].hand.push(card4)
 
+// }
 
-function dealHands(){
-        // alternate handing cards to each player
-        // 2 cards each
-        for(var i = 0; i < 2; i++)
-        {
-            for (var x = 0; x < players.length; x++){
-                var card = deck[deck.length-1];
-                players[x].hand.push(card);
-                deck.splice(deck.length-1, 1);
-                console.log(deck)
-                // renderCard(card, x);
-                // updatePoints();
-            }
-        }
+// function dealHands(){
+//         // alternate handing cards to each player
+//         // 2 cards each
+//         for(var i = 0; i < 2; i++)
+//         {
+//             for (var x = 0; x < players.length; x++){
+//                 var card = deck[deck.length-1];
+//                 players[x].hand.push(card);
+//                 deck.splice(deck.length-1, 1);
+//                 console.log(deck)
+//                 // renderCard(card, x);
+//                 // updatePoints();
+//             }
+//         }
 
-    }
+//     }
+//     function dealer(){
+// 	var card;
+// 	while(players[0].hand.length<2){
+// 		players[0].hand.push(deck.pop())
+// 		updateDeck()
+// 	}
+// 	while(players[1].hand.length<2){
+// 		card = deck.pop()
+// 		console.log(card)
+// 		if(repeat(players[0].hand, card == true)){
+// 			deck.splice(index, 1);
+// 			card = deck.pop()
+// 			players[1].hand.push(card)
+// 			updateDeck()
+// 		}
+		
+// 	}
+
+// }
+// function getCard(){
+// 	card = deck.pop()
+// 	return card
+// 	console.log(deck.length)
+	
+// }
+// function updateDeck(){
+// 	card = deck.pop()
+// 	index = deck.indexOf(card)
+// 	if (index > -1){
+// 		deck.splice(index, 1);
+// 	}
+
+// }
+
 
