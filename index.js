@@ -8,6 +8,7 @@ var cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var suits = ["diamonds", "hearts", "spades", "clubs"];
 var deck = []
 var players = []
+var activePlayer = 1
 
 function startGame(){
 	createPlayers(2)
@@ -18,9 +19,8 @@ function startGame(){
 }
 
 function createPlayers(num){
-	hand = new Array
-	hand1 = []
 	for(i=1; i<=num; i++){
+		hand = new Array
 		var player = {name: "player" + i, hand: hand, score: 0}
 		players.push(player)
 		if(player.name == "player1"){
@@ -28,7 +28,6 @@ function createPlayers(num){
 		}
 		if(player.name == "player2"){
 			player.name = "Me"
-			player.hand = hand1
 		}
 	}
 	return players
@@ -67,6 +66,14 @@ function shuffle(){
 	
 }
 
+function shuffleCheck(){
+	if(deck.length <= 10){
+		deck.length = 0
+		getDeck()
+		shuffle()
+	}
+}
+
 function deal(){
 	card1 = deck.pop()
 	card2 = deck.pop()
@@ -77,6 +84,7 @@ function deal(){
 	players[0].hand.push(card2)
 	players[1].hand.push(card3)
 	players[1].hand.push(card4)
+	shuffleCheck()
 }
 
 function checkScore(){
@@ -86,6 +94,9 @@ function checkScore(){
 			holder_i.push(players[i].hand[s].Weight)  
 		}
 		players[i].score = holder_i.reduce(add, 0)
+		if(players[i].score > 21){
+			endCheck()
+		}
 	}
 
 }
@@ -95,11 +106,58 @@ function add(a, b) {
 }
 
 function hitPlayer(){
-	card = deck.pop()
-	players[0].hand.push(card)
-	checkScore()
+		card = deck.pop()
+		players[1].hand.push(card)
+		checkScore()
+}
+
+function hitDealer(){
+	while(players[0].score < 17){
+		card = deck.pop()
+		players[0].hand.push(card)
+		checkScore()
+	}
+	endCheck()
+}
+
+function stay(){
+	hitDealer()
 
 }
+
+function endCheck(){
+	if(players[1].score > 21){
+		console.log(players[1].name + " " + "busted")
+		end()
+	}
+	else if(players[0].score > 21){
+		console.log(players[0].name + " " + "busted")
+		end()
+	}else {
+		if(players[0].score > players[1].score){
+			console.log("The Dealer Wins")
+			end()
+		}
+		if(players[1].score > players[0].score){
+			console.log("Player Wins!")
+			end()
+		}
+		if(players[1].score == players[0].score){
+			console.log("It's a push!")
+			end()
+		}
+	}
+}
+
+function end(){
+	for(i = 0; i<players.length; i++){
+		players[i].score = 0
+		players[i].hand.length = 0
+	}
+	deal()
+	checkScore()
+}
+
 function renderDeck(){
 	
 	for(var i = 0; i < deck.length; i++){
