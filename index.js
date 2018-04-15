@@ -9,8 +9,16 @@ var suits = ["diamonds", "hearts", "spades", "clubs"];
 var deck = []
 var players = []
 
+function startGame(){
+	createPlayers(2)
+	getDeck()
+	shuffle()
+	deal()
+	checkScore()
+}
+
 function createPlayers(num){
-	hand = []
+	hand = new Array
 	hand1 = []
 	for(i=1; i<=num; i++){
 		var player = {name: "player" + i, hand: hand, score: 0}
@@ -25,7 +33,6 @@ function createPlayers(num){
 	}
 	return players
 }
-
 
 function getDeck(){
 
@@ -46,21 +53,6 @@ function getDeck(){
 	return deck;
 }
 
-
-function deal(){
-	card1 = deck.pop()
-	card2 = deck.pop()
-	card3 = deck.pop()
-	card4 = deck.pop()
-
-	players[0].hand.push(card1)
-	players[0].hand.push(card2)
-	players[1].hand.push(card3)
-	players[1].hand.push(card4)
-}
-
-
-
 function shuffle(){
 	
 	for (var i = 0; i < 1000; i++){
@@ -75,6 +67,39 @@ function shuffle(){
 	
 }
 
+function deal(){
+	card1 = deck.pop()
+	card2 = deck.pop()
+	card3 = deck.pop()
+	card4 = deck.pop()
+
+	players[0].hand.push(card1)
+	players[0].hand.push(card2)
+	players[1].hand.push(card3)
+	players[1].hand.push(card4)
+}
+
+function checkScore(){
+	for(i=0; i<players.length; i++){
+		var holder_i = new Array
+		for(s=0; s<players[i].hand.length; s++){
+			holder_i.push(players[i].hand[s].Weight)  
+		}
+		players[i].score = holder_i.reduce(add, 0)
+	}
+
+}
+
+function add(a, b) {
+    return a + b;
+}
+
+function hitPlayer(){
+	card = deck.pop()
+	players[0].hand.push(card)
+	checkScore()
+
+}
 function renderDeck(){
 	
 	for(var i = 0; i < deck.length; i++){
@@ -93,6 +118,14 @@ function renderDeck(){
 		document.getElementById("deck").appendChild(card);
 	}
 }
+
+// function checkScore2(){
+// 	players[1].score = players[1].hand[0].Weight + players[1].hand[1].Weight
+// 	return players[1].score
+// }
+// function getScore(){
+// 	return [checkScore(), checkScore2()]
+// }
 
 // function cardsOne(){
 // 	card1 = deck.pop()
