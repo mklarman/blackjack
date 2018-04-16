@@ -84,22 +84,24 @@ function deal(){
 	players[1].hand.push(card3)
 	players[1].hand.push(card4)
 	shuffleCheck()
+	checkScore()
 }
 
 function checkScore(){
-	blackJack()
 	for(i=0; i<players.length; i++){
 		var holder_i = new Array
 		for(s=0; s<players[i].hand.length; s++){
 			holder_i.push(players[i].hand[s].Weight)  
 		}
 		players[i].score = holder_i.reduce(add, 0)
-		if(players[i].score > 21){
-			checkForBust()
-		}
 	}
+	console.log(players[0].score)
+	console.log(players[1].score)
+	blackJack()
 
 }
+	
+
 
 function add(a, b) {
     return a + b;
@@ -109,6 +111,7 @@ function hitPlayer(){
 		card = deck.pop()
 		players[1].hand.push(card)
 		checkScore()
+		console.log(players[1].score)
 		if(players[1].score > 21){
 		checkForBust()
 		}
@@ -120,13 +123,12 @@ function hitDealer(){
 		players[0].hand.push(card)
 		checkScore()
 	}
-	console.log(players[0].score)
-	console.log(players[1].score)
-	if(players[0].score >21){ 
-		checkForBust()
-	}else{
+	if(players[0].score >= 17 && players[0].score < 22){
 		checkForPush()
 		checkForWinner()
+	}else{
+		checkForBust()
+
 	}
 }
 
@@ -169,13 +171,12 @@ function checkForWinner(){
 	}
 }
 function checkForPush(){
-	if (players[0].score && players[1].score > 0){
-		if (players[0].score == players[1].score){
+	if(players[0].score && players[1].score != 0 && players[0].score == players[1].score ){
 			console.log("It's a push")
-			end()
+			end()	
 		}
 	}
-}
+
 
 function end(){
 	for(i = 0; i<players.length; i++){
