@@ -15,7 +15,6 @@ function startGame(){
 	getDeck()
 	shuffle()
 	deal()
-	checkScore()
 }
 
 function createPlayers(num){
@@ -88,6 +87,7 @@ function deal(){
 }
 
 function checkScore(){
+	blackJack()
 	for(i=0; i<players.length; i++){
 		var holder_i = new Array
 		for(s=0; s<players[i].hand.length; s++){
@@ -95,7 +95,7 @@ function checkScore(){
 		}
 		players[i].score = holder_i.reduce(add, 0)
 		if(players[i].score > 21){
-			endCheck()
+			checkForBust()
 		}
 	}
 
@@ -109,41 +109,69 @@ function hitPlayer(){
 		card = deck.pop()
 		players[1].hand.push(card)
 		checkScore()
+		if(players[1].score > 21){
+		checkForBust()
+		}
 }
 
 function hitDealer(){
-	while(players[0].score < 17){
+	while(players[0].score < 17 && players[0].score > 0){
 		card = deck.pop()
 		players[0].hand.push(card)
 		checkScore()
 	}
-	endCheck()
+	console.log(players[0].score)
+	console.log(players[1].score)
+	if(players[0].score >21){ 
+		checkForBust()
+	}else{
+		checkForPush()
+		checkForWinner()
+	}
 }
 
 function stay(){
 	hitDealer()
 
 }
-
-function endCheck(){
-	if(players[1].score > 21){
-		console.log(players[1].name + " " + "busted")
-		end()
+function blackJack(){
+	for(i=0; i<players.length; i++){
+		if(players[i].score == 21){
+			console.log(players[i].name + " " + "has blackjack")
+			end()
+		}
 	}
-	else if(players[0].score > 21){
-		console.log(players[0].name + " " + "busted")
-		end()
-	}else {
-		if(players[0].score > players[1].score){
-			console.log("The Dealer Wins")
+}
+
+function checkForBust(){
+	for(i=0; i<players.length; i++){
+		if(players[i].score > 21){
+			console.log(players[i].name + " " + "has busted")
 			end()
+
 		}
-		if(players[1].score > players[0].score){
-			console.log("Player Wins!")
-			end()
+	}
+}
+function checkForWinner(){
+	if(players[0].score && players[1].score <= 21){
+		if(players[0].score && players[1].score !== 0){
+			if(players[0].score > players[1].score){
+				console.log("Dealer wins")
+				end()
+			}
+			if(players[1].score > players[0].score){
+				console.log("Player wins")
+				end()
+			}
+			
 		}
-		if(players[1].score == players[0].score){
-			console.log("It's a push!")
+
+	}
+}
+function checkForPush(){
+	if (players[0].score && players[1].score > 0){
+		if (players[0].score == players[1].score){
+			console.log("It's a push")
 			end()
 		}
 	}
@@ -155,7 +183,6 @@ function end(){
 		players[i].hand.length = 0
 	}
 	deal()
-	checkScore()
 }
 
 function renderDeck(){
@@ -176,6 +203,33 @@ function renderDeck(){
 		document.getElementById("deck").appendChild(card);
 	}
 }
+
+// function endCheck(){
+// 	console.log(players[0].score)
+// 	console.log(players[1].score)
+// 	if(players[1].score > 21){
+// 		console.log(players[1].name + " " + "busted")
+// 		end()
+// 	}
+// 	else if(players[0].score > 21){
+// 		console.log(players[0].name + " " + "busted")
+// 		end()
+// 	}else {
+// 		if(players[0].score > players[1].score){
+// 			console.log("The Dealer Wins")
+// 			end()
+// 		}
+// 		if(players[1].score > players[0].score){
+// 			console.log("Player Wins!")
+// 			end()
+// 		}
+// 		if(players[1].score == players[0].score){
+// 			console.log("It's a push!")
+// 			end()
+// 		}
+// 	}
+// }
+
 
 // function checkScore2(){
 // 	players[1].score = players[1].hand[0].Weight + players[1].hand[1].Weight
