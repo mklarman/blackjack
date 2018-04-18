@@ -15,6 +15,7 @@ function startGame(){
 	getDeck()
 	shuffle()
 	deal()
+	console.log([players[0].score, players[1].score])
 }
 
 function createPlayers(num){
@@ -85,6 +86,7 @@ function deal(){
 	players[1].hand.push(card4)
 	shuffleCheck()
 	checkScore()
+	console.log([players[0].score, players[1].score])
 }
 
 function checkScore(){
@@ -122,18 +124,21 @@ function updatePly(){
 			players[1].score = acesP[0][0] + pointsP
 			}
 	}else{
-		for(i=0; i<aces.length; i++)
+		for(i=0; i<acesP.length; i++)
 			if(acesP[i][1] + pointsP <= 21){
-				players[1].score = acesP[i][1] + pointsP
+				pointsP = acesP[i][1] + pointsP
 			}else{
-				players[1].score = acesP[i][0] + pointsP
+				pointsP = acesP[i][0] + pointsP
 			}
+			players[1].score = pointsP
 
 	}
 	return players[1].score
+	checkForBust()
 }
 
-	function updateDlr(){
+
+function updateDlr(){
 	aces = []
 	trueCards = []
 	for(i=0; i<players[0].hand.length; i++){
@@ -155,57 +160,16 @@ function updatePly(){
 	}else{
 		for(i=0; i<aces.length; i++)
 			if(aces[i][1] + points <= 21){
-				players[0].score = aces[i][1] + points
+				points = aces[i][1] + points
 			}else{
-				players[0].score = aces[i][0] + points
+				points = aces[i][0] + points
 			}
+			players[0].score = points
 
 	}
 	return players[0].score
+	checkForBust()
 }
-
-
-
-
-
-
-
-
-// 	var aces = []
-// 	for(i=0; i<players.length; i++){
-// 		var holder_i = new Array
-// 		for(s=0; s<players[i].hand.length; s++){
-// 			if(players[i].hand[s].Value == "A")
-// 			holder_i.push(players[i].hand[s].Weight)  
-// 		}
-// 		for(j=0; j<players[i].hand.length; j++){
-// 			if(players[i].hand[j].Value == "A"){
-// 				aces.push(j)
-// 			}
-// 		}
-// 		points = holder_i.reduce(add, 0)
-// 		if(aces.length == 0){
-// 			players[i].score = points
-// 		}
-// 		if(aces.length == 1){
-// 			if (aces[0].Weight[1] + points <= 21){
-// 				players[i].score = points + aces[0].Weight[1]
-// 			}
-// 		}
-// 		if(aces.length >= 2){
-// 			for(a=0; a<aces.length; a++){
-// 				if(aces[a].Weight[1] + points > 21){
-// 					players[i].score = points + aces[a].Weight[0]
-// 				}
-// 			}
-
-// 		}
-// 	}
-// 	console.log(players[0].score)
-// 	console.log(players[1].score)
-
-// }
-	
 
 
 function add(a, b) {
@@ -213,28 +177,22 @@ function add(a, b) {
 }
 
 function hitPlayer(){
-		card = deck.pop()
-		players[1].hand.push(card)
-		checkScore()
-		console.log(players[1].score)
-		if(players[1].score > 21){
-		checkForBust()
-		}
+	card = deck.pop()
+	players[1].hand.push(card)
+	updatePly()
+	console.log(players[1].score)
+	if(players[1].score > 21){
+	checkForBust()
+	}
 }
 
 function hitDealer(){
 	while(players[0].score < 17 && players[0].score > 0){
 		card = deck.pop()
 		players[0].hand.push(card)
-		checkScore()
+		updateDlr()
 	}
-	if(players[0].score >= 17 && players[0].score < 22){
-		checkForPush()
-		checkForWinner()
-	}else{
-		checkForBust()
-
-	}
+	checkForWinner()
 }
 
 function stay(){
@@ -242,29 +200,38 @@ function stay(){
 
 }
 function blackjack(){
+	var blackjack = false
 	if(players[0].hand[0].Value == "J" || "Q" || "K"){
 		if(players[0].hand[1].Value == "A"){
 			console.log(players[0].name + " has blackjack")
-			end()
+			blackjack = true
+			console.log(players[0].hand)
 		}
 	}
 	if(players[0].hand[0].Value == "A"){
 		if(players[0].hand[1].Value == "J" || "Q" || "K"){
 			console.log(players[0].name + " has blackjack")
-			end()
+			blackjack = true
+			console.log(players[0].hand)
 			}
 		}
 	if(players[1].hand[0].Value == "J" || "Q" || "K"){
 		if(players[1].hand[1].Value == "A"){
 			console.log(players[1].name + " has blackjack")
-			end()
+			blackjack = true
+			console.log(players[1].hand)
 		}
 	}
 	if(players[1].hand[0].Value == "A"){
 		if(players[1].hand[1].Value == "J" || "Q" || "K"){
 			console.log(players[1].name + " has blackjack")
-			end()
+			blackjack = true
+			console.log(players[1].hand)
 			}
+	}
+
+	if(blackjack == true){
+		end()
 	}
 	
 
@@ -279,21 +246,19 @@ function checkForBust(){
 	}
 }
 function checkForWinner(){
-	if(players[0].score && players[1].score <= 21){
-		if(players[0].score && players[1].score !== 0){
-			if(players[0].score > players[1].score){
-				console.log("Dealer wins")
-				end()
-			}
-			if(players[1].score > players[0].score){
-				console.log("Player wins")
-				end()
-			}
-			
-		}
-
+	if(players[0].score > 21){
+		checkForBust()
+	}else if(players[0].score > players[1].score){
+		console.log("Dealer Wins")
+		end()
+	}else if(players[1].score > players[0].score){
+		console.log("Player Wins")
+		end()
+	}else{
+		checkForPush()
 	}
 }
+
 function checkForPush(){
 	if(players[0].score && players[1].score != 0 && players[0].score == players[1].score ){
 			console.log("It's a push")
@@ -310,25 +275,44 @@ function end(){
 	deal()
 }
 
-function renderDeck(){
+// function renderDeck(){
 	
-	for(var i = 0; i < deck.length; i++){
+// 	for(var i = 0; i < deck.length; i++){
 		
-		var card = document.createElement("div");
-		var value = document.createElement("div");
-		var suit = document.createElement("div");
-		card.className = "card";
-		value.className = "value";
-		suit.className = "suit " + deck[i].Suit;
+// 		var card = document.createElement("div");
+// 		var value = document.createElement("div");
+// 		var suit = document.createElement("div");
+// 		card.className = "card";
+// 		value.className = "value";
+// 		suit.className = "suit " + deck[i].Suit;
 
-		value.innerHTML = deck[i].Value;
-		card.appendChild(value);
-		card.appendChild(suit);
+// 		value.innerHTML = deck[i].Value;
+// 		card.appendChild(value);
+// 		card.appendChild(suit);
 
-		document.getElementById("deck").appendChild(card);
-	}
-}
+// 		document.getElementById("deck").appendChild(card);
+// 	}
+// }
 
+
+// 	if(players[0].score && players[1].score <= 21){
+// 		console.log([players[0].score, players[1].score])
+// 		if(players[0].score && players[1].score !== 0){
+// 			if(players[0].score > players[1].score){
+// 				console.log("Dealer wins")
+// 				end()
+// 			}else if(players[1].score > players[0].score){
+// 				console.log("Player wins")
+// 				end()
+// 			}else{
+// 				checkForPush()
+// 			}
+			
+			
+// 		}
+
+// 	}
+// }
 // function endCheck(){
 // 	console.log(players[0].score)
 // 	console.log(players[1].score)
