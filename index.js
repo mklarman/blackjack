@@ -137,6 +137,39 @@ function updatePly(){
 	checkForBust()
 }
 
+function updatePly2(){
+	acesP2 = []
+	trueCardsP2 = []
+	for(i=0; i<players[1].hand2.length; i++){
+		if(players[1].hand2[i].Value == "A"){
+			acesP2.push(players[1].hand2[i].Weight)
+		}else{
+			trueCardsP2.push(players[1].hand2[i].Weight)
+		}
+	}
+	console.log(acesP2)
+	var pointsP2 = trueCardsP2.reduce(add, 0)
+	if(acesP2.length == 0){
+		players[1].score2 = pointsP2
+	}else if(acesP2.length == 1){
+		if(acesP2[0][1] + pointsP2 <= 21){
+			players[1].score2 = acesP2[0][1] + pointsP2
+		}else{
+			players[1].score2 = acesP2[0][0] + pointsP2
+			}
+	}else{
+		for(i=0; i<acesP2.length; i++)
+			if(acesP2[i][1] + pointsP2 <= 21){
+				pointsP2 = acesP2[i][1] + pointsP2
+			}else{
+				pointsP2 = acesP2[i][0] + pointsP2
+			}
+			players[1].score2 = pointsP2
+
+	}
+	return players[1].score2
+	splitBustCheck()
+}
 
 function updateDlr(){
 	aces = []
@@ -263,8 +296,48 @@ function checkForPush(){
 	if(players[0].score && players[1].score != 0 && players[0].score == players[1].score ){
 			console.log("It's a push")
 			end()	
-		}
 	}
+}
+
+function splitHit(){
+	card = deck.pop()
+	if(players[1].score > 21){
+		players[1].hand2.push(card)
+		updatePly2()
+	}else{
+		players[1].hand.push(card)
+		updatePly()
+	}
+
+
+}
+
+function splitBustCheck(){
+	if(players[1].score > 21){
+		console.log("You busted on hand 1")
+	}
+	if(players[1].score2 > 21){
+		console.log("you busted on hand 2")
+		end()
+	}
+
+}
+
+
+
+function checkForSplit(){
+	var split = false
+	if(players[1].hand[0].Value == players[1].hand[1].Value){
+		split = true
+		players[1].hand.length = 1
+		players[1].hand2 = []
+		players[1].hand2.push(players[1].hand[0])
+		players[1].score = players[1].hand[0].Weight
+		players[1].score2 = players[1].hand2[0].Weight
+	}
+	console.log([players[1].score, players[1].score2])
+}
+
 
 
 function end(){
