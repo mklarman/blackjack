@@ -1,38 +1,35 @@
-.card
-{
-	border: solid 1px #aaa;
-	border-radius: 9px;
-	width: 95px;
+#dealerCards{
 	height: 150px;
-	float:left;
-	background-color: white;
-	padding: 3px 3px 3px 3px;
+	width: 80%;
+	border: 1px solid red;
 }
 
-.card .value{
-	font-size:15pt;
-	font-family: sans-serif;
+#playerCards{
+	height: 150px;
+	width: 80%;
+	border: 1px solid red;
+	margin-top: 15px;
 }
 
-.card .suit
-{
-	background-image: url('suits.png');
-	height: 100px;
-	width: 90px;
+#dealerPoints{
+	height: 75px;
+	width: 75px;
+	border: 1px solid red;
+	margin-left: 400px;
+	margin-top: 15px;
 }
 
-.card .diamonds
-{
-	background-position-y: 100px;
+#playerPoints{
+	height: 75px;
+	width: 75px;
+	border: 1px solid red;
+	margin-left: 400px;
+	margin-top: 0px;
 }
 
-.card .hearts
-{
-	background-position-x: 90px;
-}
-
-.card .clubs
-{
-	background-position-x:90px;
-	background-position-y:100px;
+#theDeck{
+	height: 240px;
+	width: 175px;
+	border: 1px solid red;
+	margin-left: 600px;
 }

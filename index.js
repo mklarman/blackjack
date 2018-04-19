@@ -2,7 +2,7 @@
 // is made with a function that loops through an argument and for each i we create the player object and push it to an array.
 // Need functions for: creating a deck, shuffling a deck, dealing cards, summing up hand totals,
 // hitting, staying, updating points, declaring a winner.  Restart the game using the same deck.
-
+// split: run a split check on the deal. If card values equal, the function will show the split button.  Put add event listener on submit button.  In that function: split the hand into two hands.  Options on first hand, need a bust check, stay options, hit option, update score function, when stay or bust that hides hand 1 options and shows hand 2 options which has all the same options.  After the player clicks stay on hand 2 is when the dealer draws, when the dealer's score is over 17 but under 21 have to check the score vs both hands of the player, if the dealer busts end the game and clear both hands and both scores 
 
 var cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var suits = ["diamonds", "hearts", "spades", "clubs"];
@@ -15,6 +15,8 @@ function startGame(){
 	getDeck()
 	shuffle()
 	deal()
+	renderPlayer()
+	array = []
 	console.log([players[0].score, players[1].score])
 }
 
@@ -210,18 +212,43 @@ function add(a, b) {
 }
 
 function hitPlayer(){
+	var cardHolder = document.createElement("div") 
+	cardHolder.setAttribute("class", "renCards")
+	cardHolder.style.height = '149px'
+	cardHolder.style.width = '149px'
+	cardHolder.style.border = '1px solid red'
+	cardHolder.style.display = 'inline-block'
+	cardHolder.style.fontSize = '23px'
+	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand.push(card)
 	updatePly()
+	playerCards.appendChild(cardHolder)
 	console.log(players[1].score)
 	if(players[1].score > 21){
 	checkForBust()
+	}
+}
+function renderHitForPlr(){
+	for(i=2; i<players[1].hand.length; i++){
+		var hitCard = document.createElement("div")
+		hitCard.setAttribute("class", "renCards")
+		hitCard.style.height = '149px'
+		hitCard.style.width = '149px'
+		hitCard.style.border = '1px solid red'
+		hitCard.style.display = 'inline-block'
+		hitCard.style.fontSize = '23px'
+		hitCard.style.textAlign = 'center'
+		hitCard.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit 
+
 	}
 }
 
 function hitDealer(){
 	while(players[0].score < 17 && players[0].score > 0){
 		card = deck.pop()
+		console.log(card)
 		players[0].hand.push(card)
 		updateDlr()
 	}
@@ -309,7 +336,6 @@ function splitHit(){
 		updatePly()
 	}
 
-
 }
 
 function splitBustCheck(){
@@ -318,7 +344,7 @@ function splitBustCheck(){
 	}
 	if(players[1].score2 > 21){
 		console.log("you busted on hand 2")
-		end()
+		end2()
 	}
 
 }
@@ -336,9 +362,36 @@ function checkForSplit(){
 		players[1].score2 = players[1].hand2[0].Weight
 	}
 	console.log([players[1].score, players[1].score2])
+	if(split == true){
+
+	}
 }
+var array = []
+var playerCards = document.getElementById("playerCards")
+function renderPlayer(){
+	for(i=0; i<players[1].hand.length; i++){
+		renderedCards = document.createElement("div")
+		renderedCards.setAttribute("class", "renCards")
+		renderedCards.style.height = '149px'
+		renderedCards.style.width = '149px'
+		renderedCards.style.border = '1px solid red'
+		renderedCards.style.display = 'inline-block'
+		renderedCards.style.fontSize = '23px'
+		renderedCards.style.textAlign = 'center'
+		renderedCards.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit
+		var card_i = players[1].hand[i].Value + players[1].hand[i].Suit
+		if(cardCheck(card_i) == false){
+			array.push(card_i)
+			playerCards.appendChild(renderedCards)
 
+		}
+		
 
+	}
+}
+function cardCheck(value){
+      return (array.indexOf(value) === -1) ? false : true   
+    }
 
 function end(){
 	for(i = 0; i<players.length; i++){
@@ -346,6 +399,10 @@ function end(){
 		players[i].hand.length = 0
 	}
 	deal()
+}
+
+function end2(){
+	
 }
 
 // function renderDeck(){
