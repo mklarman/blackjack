@@ -15,7 +15,7 @@
 	height: 75px;
 	width: 75px;
 	border: 1px solid red;
-	margin-left: 400px;
+	margin-left: 20px;
 	margin-top: 15px;
 }
 
@@ -23,13 +23,28 @@
 	height: 75px;
 	width: 75px;
 	border: 1px solid red;
-	margin-left: 400px;
+	margin-left: 20px;
 	margin-top: 0px;
 }
 
-#theDeck{
+#deckCount{
 	height: 240px;
 	width: 175px;
 	border: 1px solid red;
-	margin-left: 600px;
+	margin-left: 400px;
+	margin-top: -220px;
+}
+
+#buttonContainer{
+	height: 170px;
+	width: 100px;
+	border: 1px solid red;
+	margin-top: 50px;
+
+}
+.buttons{
+	height: 200px;
+	width: 70px;
+	display: block;
+	margin-top: 20px;
 }

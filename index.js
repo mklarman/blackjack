@@ -10,15 +10,43 @@ var deck = []
 var players = []
 var activePlayer = 1
 
+var start = document.getElementById("startGame")
+var hitPlr = document.getElementById("hitPlr")
+var plrStay = document.getElementById("plrStay")
+var splitHand = document.getElementById("splitHand")
+var dblDown = document.getElementById("dblDown")
+var deckCount = document.getElementById("deckCount")
+
+
 function startGame(){
 	createPlayers(1)
 	getDeck()
 	shuffle()
-	deal()
-	renderPlayer()
-	array = []
-	console.log([players[0].score, players[1].score])
+	deckCount.innerHTML = deck.length
+	// deal()
+	// renderPlayer()
+	// renderDealer()
+	// array = []
+	// console.log([players[0].score, players[1].score])
 }
+
+start.addEventListener("click", function(){
+	startGame()
+})
+
+hitPlr.addEventListener("click", function(){
+	hitPlayer()
+})
+
+plrStay.addEventListener("click", function(){
+	stay()
+})
+
+var dealCards = document.getElementById("dealCards")
+dealCards.addEventListener("click", function(){
+	deal()
+
+})
 
 function createPlayers(num){
 	for(i=0; i<=num; i++){
@@ -77,31 +105,77 @@ function shuffleCheck(){
 }
 
 function deal(){
+	for(i = 0; i<players.length; i++){
+		players[i].score = 0
+		players[i].hand.length = 0
+	}
+
+	while (playerCards.firstChild) {
+    playerCards.removeChild(playerCards.firstChild);
+	}
+
+	while (dealerCards.firstChild) {
+    dealerCards.removeChild(dealerCards.firstChild);
+	}
+	shuffleCheck()
+
 	card1 = deck.pop()
 	card2 = deck.pop()
 	card3 = deck.pop()
 	card4 = deck.pop()
 
 	players[0].hand.push(card1)
-	players[0].hand.push(card2)
-	players[1].hand.push(card3)
+	players[0].hand.push(card3)
+	players[1].hand.push(card2)
 	players[1].hand.push(card4)
-	shuffleCheck()
+	renderPlayer()
+	renderDealer()
 	checkScore()
+	deckCount.innerHTML = deck.length
 	console.log([players[0].score, players[1].score])
+
 }
+var dealerPoints = document.getElementById("dealerPoints")
+var playerPoints = document.getElementById("playerPoints")
 
 function checkScore(){
-	var card1 = players[0].hand[0].Weight
-	var card2 = players[0].hand[1].Weight
-	var card3 = players[1].hand[0].Weight
-	var card4 = players[1].hand[1].Weight
-
+	var card1 = players[0].hand[0]
+	var card2 = players[0].hand[1]
+	var card3 = players[1].hand[0]
+	var card4 = players[1].hand[1]
+	if(card1.Value == "A"){
+		card1 = players[0].hand[0].Weight[1]
+		console.log(card1)
+	}else{
+		card1 = players[0].hand[0].Weight
+	}
+	if(card2.Value == "A" && card1.Value == "A" ){
+		card2 = players[0].hand[1].Weight[0]
+		console.log(card2)
+	}else if(card2.Value == "A"){
+		card2 = players[0].hand[1].Weight[1]
+	}else{
+		card2 = players[0].hand[1].Weight
+	}
+	if(card3.Value == "A"){
+		card3 = players[1].hand[0].Weight[1]
+		console.log(card3)
+	}else{
+		card3 = players[1].hand[0].Weight
+	}
+	if(card4.Value == "A" && card3.Value == "A"){
+		card4 = players[1].hand[1].Weight[0]
+		console.log(card4)
+	}else if (card4.Value == "A"){
+		card4 = players[1].hand[1].Weight[1]
+	}else{
+		card4 = players[1].hand[1].Weight
+	}
+	
 	players[0].score = card1 + card2
 	players[1].score = card3 + card4
-	blackjack()
-
-	return [players[0].score, players[1].score]
+	dealerPoints.innerHTML = players[0].score
+	playerPoints.innerHTML = players[1].score
 
 }
 
@@ -135,7 +209,8 @@ function updatePly(){
 			players[1].score = pointsP
 
 	}
-	return players[1].score
+	console.log(players[1].score)
+	playerPoints.innerHTML = players[1].score
 	checkForBust()
 }
 
@@ -169,7 +244,6 @@ function updatePly2(){
 			players[1].score2 = pointsP2
 
 	}
-	return players[1].score2
 	splitBustCheck()
 }
 
@@ -202,7 +276,8 @@ function updateDlr(){
 			players[0].score = points
 
 	}
-	return players[0].score
+	console.log(players[0].score)
+	dealerPoints.innerHTML = players[0].score
 	checkForBust()
 }
 
@@ -221,6 +296,7 @@ function hitPlayer(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	deckCount.innerHTML = deck.length
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand.push(card)
 	updatePly()
@@ -247,10 +323,21 @@ function renderHitForPlr(){
 
 function hitDealer(){
 	while(players[0].score < 17 && players[0].score > 0){
+		var cardHolder = document.createElement("div") 
+		cardHolder.setAttribute("class", "renCards")
+		cardHolder.style.height = '149px'
+		cardHolder.style.width = '149px'
+		cardHolder.style.border = '1px solid red'
+		cardHolder.style.display = 'inline-block'
+		cardHolder.style.fontSize = '23px'
+		cardHolder.style.textAlign = 'center'
 		card = deck.pop()
+		deckCount.innerHTML = deck.length
+		cardHolder.innerHTML = card.Value + card.Suit
 		console.log(card)
 		players[0].hand.push(card)
 		updateDlr()
+		dealerCards.appendChild(cardHolder)
 	}
 	checkForWinner()
 }
@@ -264,14 +351,15 @@ function blackjack(){
 	if(players[0].hand[0].Value == "J" || "Q" || "K"){
 		if(players[0].hand[1].Value == "A"){
 			console.log(players[0].name + " has blackjack")
+			dealerPoints.innerHTML = 21
 			blackjack = true
-			console.log(players[0].hand)
+			console.log(players[0].score)
 		}
 	}
 	if(players[0].hand[0].Value == "A"){
 		if(players[0].hand[1].Value == "J" || "Q" || "K"){
 			console.log(players[0].name + " has blackjack")
-			blackjack = true
+			dealerPoints.innerHTML = 21
 			console.log(players[0].hand)
 			}
 		}
@@ -279,6 +367,7 @@ function blackjack(){
 		if(players[1].hand[1].Value == "A"){
 			console.log(players[1].name + " has blackjack")
 			blackjack = true
+			playerPoints.innerHTML = 21
 			console.log(players[1].hand)
 		}
 	}
@@ -286,13 +375,11 @@ function blackjack(){
 		if(players[1].hand[1].Value == "J" || "Q" || "K"){
 			console.log(players[1].name + " has blackjack")
 			blackjack = true
+			playerPoints.innerHTML = 21
 			console.log(players[1].hand)
 			}
 	}
 
-	if(blackjack == true){
-		end()
-	}
 	
 
 }
@@ -300,7 +387,6 @@ function checkForBust(){
 	for(i=0; i<players.length; i++){
 		if(players[i].score > 21){
 			console.log(players[i].name + " " + "has busted")
-			end()
 
 		}
 	}
@@ -310,10 +396,8 @@ function checkForWinner(){
 		checkForBust()
 	}else if(players[0].score > players[1].score){
 		console.log("Dealer Wins")
-		end()
 	}else if(players[1].score > players[0].score){
 		console.log("Player Wins")
-		end()
 	}else{
 		checkForPush()
 	}
@@ -321,8 +405,7 @@ function checkForWinner(){
 
 function checkForPush(){
 	if(players[0].score && players[1].score != 0 && players[0].score == players[1].score ){
-			console.log("It's a push")
-			end()	
+			console.log("It's a push")	
 	}
 }
 
@@ -344,7 +427,6 @@ function splitBustCheck(){
 	}
 	if(players[1].score2 > 21){
 		console.log("you busted on hand 2")
-		end2()
 	}
 
 }
@@ -388,6 +470,26 @@ function renderPlayer(){
 		
 
 	}
+}
+
+var dealerCards = document.getElementById("dealerCards")
+function renderDealer(){
+	for(i=0; i<players[0].hand.length; i++){
+		renderedCardsD = document.createElement("div")
+		renderedCards.setAttribute("class", "renCards")
+		renderedCardsD.style.height = '149px'
+		renderedCardsD.style.width = '149px'
+		renderedCardsD.style.border = '1px solid red'
+		renderedCardsD.style.display = 'inline-block'
+		renderedCardsD.style.fontSize = '23px'
+		renderedCardsD.style.textAlign = 'center'
+		renderedCardsD.innerHTML = players[0].hand[i].Value + players[0].hand[i].Suit
+		
+		dealerCards.appendChild(renderedCardsD)
+		
+
+	}
+
 }
 function cardCheck(value){
       return (array.indexOf(value) === -1) ? false : true   
