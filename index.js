@@ -16,6 +16,7 @@ var plrStay = document.getElementById("plrStay")
 var splitHand = document.getElementById("splitHand")
 var dblDown = document.getElementById("dblDown")
 var deckCount = document.getElementById("deckCount")
+var dealCards = document.getElementById("dealCards")
 
 
 function startGame(){
@@ -23,11 +24,9 @@ function startGame(){
 	getDeck()
 	shuffle()
 	deckCount.innerHTML = deck.length
-	// deal()
-	// renderPlayer()
-	// renderDealer()
-	// array = []
-	// console.log([players[0].score, players[1].score])
+	start.style.display = "none"
+	dealCards.style.display = "block"
+	
 }
 
 start.addEventListener("click", function(){
@@ -42,11 +41,19 @@ plrStay.addEventListener("click", function(){
 	stay()
 })
 
-var dealCards = document.getElementById("dealCards")
+dblDown.addEventListener("click", function(){
+	doubleDown()
+})
+
 dealCards.addEventListener("click", function(){
 	deal()
 
 })
+
+hitPlr.style.display = "none"
+plrStay.style.display = "none"
+dblDown.style.display = "none"
+dealCards.style.display = "none"
 
 function createPlayers(num){
 	for(i=0; i<=num; i++){
@@ -93,6 +100,7 @@ function shuffle(){
 		deck[location1] = deck[location2];
 		deck[location2] = tmp;
 	}
+	dealCards.style.display = "block"
 	
 }
 
@@ -105,6 +113,11 @@ function shuffleCheck(){
 }
 
 function deal(){
+	dealCards.style.display = "none"
+	hitPlr.style.display = "block"
+	plrStay.style.display = "block"
+	dblDown.style.display = "block"
+
 	for(i = 0; i<players.length; i++){
 		players[i].score = 0
 		players[i].hand.length = 0
@@ -176,6 +189,7 @@ function checkScore(){
 	players[1].score = card3 + card4
 	dealerPoints.innerHTML = players[0].score
 	playerPoints.innerHTML = players[1].score
+	// blackjack()
 
 }
 
@@ -346,21 +360,45 @@ function stay(){
 	hitDealer()
 
 }
+
+function doubleDown(){
+	var cardHolder = document.createElement("div") 
+	cardHolder.setAttribute("class", "renCards")
+	cardHolder.style.height = '149px'
+	cardHolder.style.width = '149px'
+	cardHolder.style.border = '1px solid red'
+	cardHolder.style.display = 'inline-block'
+	cardHolder.style.fontSize = '23px'
+	cardHolder.style.textAlign = 'center'
+	card = deck.pop()
+	deckCount.innerHTML = deck.length
+	cardHolder.innerHTML = card.Value + card.Suit
+	players[1].hand.push(card)
+	updatePly()
+	playerCards.appendChild(cardHolder)
+	console.log(players[1].score)
+	
+	if(players[1].score > 21){
+	checkForBust()
+	}
+	stay()
+
+}
+
 function blackjack(){
 	var blackjack = false
-	if(players[0].hand[0].Value == "J" || "Q" || "K"){
-		if(players[0].hand[1].Value == "A"){
+	if(players[0].hand[0].Value == "J" || "Q" || "K" && players[0].hand[1].Value == "A"){
 			console.log(players[0].name + " has blackjack")
 			dealerPoints.innerHTML = 21
 			blackjack = true
 			console.log(players[0].score)
-		}
 	}
 	if(players[0].hand[0].Value == "A"){
 		if(players[0].hand[1].Value == "J" || "Q" || "K"){
 			console.log(players[0].name + " has blackjack")
 			dealerPoints.innerHTML = 21
 			console.log(players[0].hand)
+			blackjack = true
 			}
 		}
 	if(players[1].hand[0].Value == "J" || "Q" || "K"){
@@ -379,6 +417,13 @@ function blackjack(){
 			console.log(players[1].hand)
 			}
 	}
+	if(blackjack = true){
+		dealCards.style.display = "block"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		dblDown.style.display = "none"
+
+	}
 
 	
 
@@ -386,12 +431,21 @@ function blackjack(){
 function checkForBust(){
 	for(i=0; i<players.length; i++){
 		if(players[i].score > 21){
+			dealCards.style.display = "block"
+			hitPlr.style.display = "none"
+			plrStay.style.display = "none"
+			dblDown.style.display = "none"
 			console.log(players[i].name + " " + "has busted")
 
 		}
 	}
 }
 function checkForWinner(){
+	dealCards.style.display = "block"
+	hitPlr.style.display = "none"
+	plrStay.style.display = "none"
+	dblDown.style.display = "none"
+
 	if(players[0].score > 21){
 		checkForBust()
 	}else if(players[0].score > players[1].score){
@@ -448,8 +502,6 @@ function checkForSplit(){
 
 	}
 }
-var array = []
-var playerCards = document.getElementById("playerCards")
 function renderPlayer(){
 	for(i=0; i<players[1].hand.length; i++){
 		renderedCards = document.createElement("div")
@@ -461,14 +513,7 @@ function renderPlayer(){
 		renderedCards.style.fontSize = '23px'
 		renderedCards.style.textAlign = 'center'
 		renderedCards.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit
-		var card_i = players[1].hand[i].Value + players[1].hand[i].Suit
-		if(cardCheck(card_i) == false){
-			array.push(card_i)
-			playerCards.appendChild(renderedCards)
-
-		}
-		
-
+		playerCards.appendChild(renderedCards)
 	}
 }
 
