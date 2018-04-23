@@ -11,6 +11,13 @@
 	margin-top: 15px;
 }
 
+#playerCards2{
+	height: 150px;
+	width: 80%;
+	border: 1px solid red;
+	margin-top: 10px;
+}
+
 #dealerPoints{
 	height: 75px;
 	width: 75px;
