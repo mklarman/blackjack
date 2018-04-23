@@ -20,6 +20,7 @@ var dealCards = document.getElementById("dealCards")
 var secondHand = document.getElementById("playerCards2")
 var hitPlr2 = document.getElementById("hitPlr2")
 var plrStay2 = document.getElementById("plrStay2")
+var splitP = document.getElementById("splitP")
 
 secondHand.style.display = "none"
 hitPlr2.style.display = "none"
@@ -28,6 +29,7 @@ plrStay.style.display = "none"
 plrStay2.style.display = "none"
 dblDown.style.display = "none"
 dealCards.style.display = "none"
+splitP.style.display = "none"
 
 
 function startGame(){
@@ -68,6 +70,10 @@ hitPlr2.addEventListener("click", function(){
 
 plrStay2.addEventListener("click", function(){
 	stay2()
+})
+
+splitP.addEventListener("click", function(){
+	splitCards()
 })
 
 
@@ -133,14 +139,24 @@ function deal(){
 	hitPlr.style.display = "block"
 	plrStay.style.display = "block"
 	dblDown.style.display = "block"
+	secondHand.style.display = "none"
 
 	for(i = 0; i<players.length; i++){
 		players[i].score = 0
 		players[i].hand.length = 0
 	}
 
+	if(players[1].hand2){
+		players[1].hand2.length = 0
+		players[1].score2 = 0
+	}
+
 	while (playerCards.firstChild) {
     playerCards.removeChild(playerCards.firstChild);
+	}
+
+	while (secondHand.firstChild){
+		secondHand.removeChild(secondHand.firstChild)
 	}
 
 	while (dealerCards.firstChild) {
@@ -159,6 +175,7 @@ function deal(){
 	players[1].hand.push(card4)
 	renderPlayer()
 	renderDealer()
+	checkForSplit()
 	checkScore()
 	deckCount.innerHTML = deck.length
 	console.log([players[0].score, players[1].score])
@@ -407,6 +424,7 @@ function stay(){
 
 function stay2(){
 	checkForWinnerSplit()
+	checkForWinnerSplit2()
 }
 
 function doubleDown(){
@@ -536,13 +554,18 @@ function checkForWinnerSplit(){
 		checkForPush()
 	}
 
+}
+
+function checkForWinnerSplit2(){
 	if(players[0].score > players[1].score2){
 		console.log("Dealer Wins hand 2")
-	}else if(players[1].score > players[0].score){
+	}else if(players[1].score2 > players[0].score){
 		console.log("Player Wins hand 2")
 	}else{
 		checkForPush2()
 	}
+
+	splitP.style.display = "none"
 
 }
 function checkForPush(){
@@ -589,7 +612,7 @@ function splitBustCheck(){
 
 function checkForSplit(){
 	if(players[1].hand[0].Value == players[1].hand[1].Value){
-		splitCards()
+		splitP.style.display = "block"
 		secondHand.style.display = "block"
 	}
 }
