@@ -1,12 +1,12 @@
 #dealerCards{
 	height: 150px;
-	width: 80%;
+	width: 100%;
 	border: 1px solid red;
 }
 
 #playerCards{
 	height: 150px;
-	width: 80%;
+	width: 100%;
 	border: 1px solid red;
 	margin-top: 15px;
 }
