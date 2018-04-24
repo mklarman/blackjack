@@ -21,6 +21,8 @@ var secondHand = document.getElementById("playerCards2")
 var hitPlr2 = document.getElementById("hitPlr2")
 var plrStay2 = document.getElementById("plrStay2")
 var splitP = document.getElementById("splitP")
+var playerWins = document.getElementById("playerWins")
+var dealerWins = document.getElementById("dealerWins")
 
 secondHand.style.display = "none"
 hitPlr2.style.display = "none"
@@ -31,9 +33,18 @@ dblDown.style.display = "none"
 dealCards.style.display = "none"
 splitP.style.display = "none"
 
+var playerWin = 0
+var dealerWin = 0
+
+playerWins.innerHTML = playerWin
+dealerWins.innerHTML = dealerWin
+
 
 function startGame(){
 	createPlayers(1)
+	getDeck()
+	getDeck()
+	getDeck()
 	getDeck()
 	shuffle()
 	deckCount.innerHTML = deck.length
@@ -87,6 +98,7 @@ function createPlayers(num){
 		}
 		if(player.name == "player1"){
 			player.name = "Me"
+			player.score2 = 0
 		}
 	}
 	return players
@@ -113,7 +125,7 @@ function getDeck(){
 
 function shuffle(){
 	
-	for (var i = 0; i < 1000; i++){
+	for (var i = 0; i < 3000; i++){
 		
 		var location1 = Math.floor((Math.random() * deck.length));
 		var location2 = Math.floor((Math.random() * deck.length));
@@ -130,16 +142,22 @@ function shuffleCheck(){
 	if(deck.length <= 10){
 		deck.length = 0
 		getDeck()
+		getDeck()
+		getDeck()
+		getDeck()
 		shuffle()
 	}
 }
 
 function deal(){
+	hitCounter = 0
 	dealCards.style.display = "none"
 	hitPlr.style.display = "block"
 	plrStay.style.display = "block"
 	dblDown.style.display = "block"
 	secondHand.style.display = "none"
+	plrStay2.style.display = "none"
+	hitPlr2.style.display = "none"
 
 	for(i = 0; i<players.length; i++){
 		players[i].score = 0
@@ -222,7 +240,7 @@ function checkScore(){
 	players[1].score = card3 + card4
 	dealerPoints.innerHTML = players[0].score
 	playerPoints.innerHTML = players[1].score
-	// blackjack()
+	blackjack()
 
 }
 
@@ -333,6 +351,7 @@ function add(a, b) {
 }
 
 function hitPlayer(){
+	dblDown.style.display = "none"
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
@@ -348,12 +367,23 @@ function hitPlayer(){
 	updatePly()
 	playerCards.appendChild(cardHolder)
 	console.log(players[1].score)
-	if(players[1].score > 21){
-	checkForBust()
+	if(players[1].score > 21 && players[1].score2 !== 0){
+		hitPlr2.style.display = "block"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		plrStay2.style.display = "block"
+	}else{
+		checkForBust()
 	}
 }
 
+var hitCounter = 0
 function hitPlayer2(){
+	hitCounter++
+	if(hitCounter == 1){
+		dblDown.style.display == "none"
+	}
+	splitP.style.display = "none"
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
@@ -407,7 +437,13 @@ function hitDealer(){
 		updateDlr()
 		dealerCards.appendChild(cardHolder)
 	}
-	checkForWinner()
+	if(players[1].score2 == 0){
+		checkForWinner()
+	}else{
+		checkForWinnerSplit()
+		checkForWinnerSplit2()
+	}
+	
 }
 
 function stay(){
@@ -423,6 +459,7 @@ function stay(){
 }
 
 function stay2(){
+	hitDealer()
 	checkForWinnerSplit()
 	checkForWinnerSplit2()
 }
@@ -452,48 +489,24 @@ function doubleDown(){
 }
 
 function blackjack(){
-	var blackjack = false
-	if(players[0].hand[0].Value == "J" || "Q" || "K" && players[0].hand[1].Value == "A"){
-			console.log(players[0].name + " has blackjack")
-			dealerPoints.innerHTML = 21
-			blackjack = true
-			console.log(players[0].score)
-	}
-	if(players[0].hand[0].Value == "A"){
-		if(players[0].hand[1].Value == "J" || "Q" || "K"){
-			console.log(players[0].name + " has blackjack")
-			dealerPoints.innerHTML = 21
-			console.log(players[0].hand)
-			blackjack = true
-			}
-		}
-	if(players[1].hand[0].Value == "J" || "Q" || "K"){
-		if(players[1].hand[1].Value == "A"){
-			console.log(players[1].name + " has blackjack")
-			blackjack = true
-			playerPoints.innerHTML = 21
-			console.log(players[1].hand)
-		}
-	}
-	if(players[1].hand[0].Value == "A"){
-		if(players[1].hand[1].Value == "J" || "Q" || "K"){
-			console.log(players[1].name + " has blackjack")
-			blackjack = true
-			playerPoints.innerHTML = 21
-			console.log(players[1].hand)
-			}
-	}
-	if(blackjack = true){
-		dealCards.style.display = "block"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		dblDown.style.display = "none"
 
+	if(players[1].score && players[0].score == 21){
+		console.log("It's a push")
+		checkForWinner()
 	}
 
-	
+	if(players[1].score == 21){
+		console.log("Player has blackjack")
+		checkForWinner()
+	}
+
+	if(players[0].score == 21){
+		console.log("Player has blackjack")
+		checkForWinner()
+	}
 
 }
+
 function checkForBust(){
 	for(i=0; i<players.length; i++){
 		if(players[i].score > 21){
@@ -526,11 +539,23 @@ function checkForWinner(){
 	dblDown.style.display = "none"
 
 	if(players[0].score > 21){
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 		checkForBust()
 	}else if(players[0].score > players[1].score){
 		console.log("Dealer Wins")
+		dealerWin++
+		playerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 	}else if(players[1].score > players[0].score){
 		console.log("Player Wins")
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 	}else{
 		checkForPush()
 	}
@@ -545,10 +570,22 @@ function checkForWinnerSplit(){
 	dblDown.style.display = "none"
 
 	if(players[0].score > 21){
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 		checkForBust()
-	}else if(players[0].score > players[1].score){
+	}else if(players[0].score < 22 && players[0].score > players[1].score){
+		dealerWin++
+		playerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 		console.log("Dealer Wins hand 1")
-	}else if(players[1].score > players[0].score){
+	}else if(players[0].score < 22 && players[0].score < players[1].score){
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
 		console.log("Player Wins hand 1")
 	}else{
 		checkForPush()
@@ -557,10 +594,30 @@ function checkForWinnerSplit(){
 }
 
 function checkForWinnerSplit2(){
-	if(players[0].score > players[1].score2){
-		console.log("Dealer Wins hand 2")
-	}else if(players[1].score2 > players[0].score){
-		console.log("Player Wins hand 2")
+	if(players[0].score > 21){
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
+		console.log("Player Wins Hand2")
+	}else if(players[1].score2 > 21){
+		dealerWin++
+		playerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
+		console.log("Player busts on hand2")
+	}else if(players[0].score < 22 && players[0].score > players[1].score2){
+		dealerWin++
+		playerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
+		console.log("Dealer wins hand2")
+	}else if(players[0].score < 22 && players[0].score < players[1].score2){
+		playerWin++
+		dealerWin--
+		playerWins.innerHTML = playerWin
+		dealerWins.innerHTML = dealerWin
+		console.log("Player wins hand2")
 	}else{
 		checkForPush2()
 	}

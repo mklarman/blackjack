@@ -58,3 +58,19 @@
 #startGame{
 	margin-top: 0px;
 }
+#playerWins{
+	height: 75px;
+	width: 75px;
+	border: 1px solid red;
+	margin-left: 100px;
+	margin-top: -75px;
+
+}
+
+#dealerWins{
+	height: 75px;
+	width: 75px;
+	border: 1px solid red;
+	margin-left: 120px;
+	margin-top: -75px;
+}
