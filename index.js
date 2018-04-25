@@ -544,7 +544,7 @@ function doubleDown(){
 
 function blackjack(){
 
-	if(players[1].score && players[0].score == 21){
+	if(players[1].score == 21 && players[0].score == 21){
 		console.log("It's a push")
 		checkForPush()
 	}else if(players[1].score == 21){
