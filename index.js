@@ -1,14 +1,12 @@
-// Gotta create a players object.  This object will hold a name and a score.  Object
-// is made with a function that loops through an argument and for each i we create the player object and push it to an array.
-// Need functions for: creating a deck, shuffling a deck, dealing cards, summing up hand totals,
-// hitting, staying, updating points, declaring a winner.  Restart the game using the same deck.
-// split: run a split check on the deal. If card values equal, the function will show the split button.  Put add event listener on submit button.  In that function: split the hand into two hands.  Options on first hand, need a bust check, stay options, hit option, update score function, when stay or bust that hides hand 1 options and shows hand 2 options which has all the same options.  After the player clicks stay on hand 2 is when the dealer draws, when the dealer's score is over 17 but under 21 have to check the score vs both hands of the player, if the dealer busts end the game and clear both hands and both scores 
 
 var cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var suits = ["diamonds", "hearts", "spades", "clubs"];
 var deck = []
 var players = []
 var activePlayer = 1
+var counter = 0
+var playerWin = 0
+var dealerWin = 0
 
 var start = document.getElementById("startGame")
 var hitPlr = document.getElementById("hitPlr")
@@ -28,6 +26,7 @@ var playerPoints = document.getElementById("playerPoints")
 var playerPoints2 = document.getElementById("playerPoints2")
 var dealerCards = document.getElementById("dealerCards")
 var dblDown2 = document.getElementById("dblDown2")
+var theCount = document.getElementById("theCount")
 
 playerPoints2.style.display = "none"
 secondHand.style.display = "none"
@@ -40,11 +39,9 @@ dealCards.style.display = "none"
 splitP.style.display = "none"
 dblDown2.style.display = "none"
 
-var playerWin = 0
-var dealerWin = 0
-
 playerWins.innerHTML = playerWin
 dealerWins.innerHTML = dealerWin
+theCount.innerHTML = counter
 
 
 function startGame(){
@@ -131,6 +128,7 @@ function getDeck(){
 }
 
 function shuffle(){
+	counter = 0
 	
 	for (var i = 0; i < 3000; i++){
 		
@@ -157,6 +155,8 @@ function shuffleCheck(){
 }
 
 function deal(){
+	players[1].score2 = 0
+	playerPoints2.style.display = "none"
 	hitCounter = 0
 	dealCards.style.display = "none"
 	hitPlr.style.display = "block"
@@ -167,6 +167,10 @@ function deal(){
 	plrStay2.style.display = "none"
 	hitPlr2.style.display = "none"
 	splitP.style.display = "none"
+
+	if(deck.length < 15){
+		shuffleCheck()
+	}
 
 	for(i = 0; i<players.length; i++){
 		players[i].score = 0
@@ -189,7 +193,6 @@ function deal(){
 	while (dealerCards.firstChild) {
     dealerCards.removeChild(dealerCards.firstChild);
 	}
-	shuffleCheck()
 
 	card1 = deck.pop()
 	card2 = deck.pop()
@@ -202,6 +205,10 @@ function deal(){
 	players[1].hand.push(card4)
 	renderPlayer()
 	renderDealer()
+	countDeck(card1)
+	countDeck(card2)
+	countDeck(card3)
+	countDeck(card4)
 	checkForSplit()
 	checkScore()
 	deckCount.innerHTML = deck.length
@@ -357,9 +364,7 @@ function add(a, b) {
 }
 
 function hitPlayer(){
-	if(players[1].hand.length == 2){
-		dblDown.style.display = "block"
-	}else{
+	if(players[1].hand.length > 1){
 		dblDown.style.display = "none"
 	}
 	splitP.style.dislay = "none"
@@ -372,6 +377,7 @@ function hitPlayer(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	countDeck(card)
 	deckCount.innerHTML = deck.length
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand.push(card)
@@ -383,12 +389,14 @@ function hitPlayer(){
 		hitPlr.style.display = "none"
 		plrStay.style.display = "none"
 		plrStay2.style.display = "block"
+		dblDown2.style.display = "block"
 	}
 }
 
 
 function hitPlayer2(){
-	if(players[1].hand2.length == 2){
+	dblDown.style.display = "none"
+	if(players[1].hand2.length < 2){
 		dblDown2.style.display = "block"
 	}else{
 		dblDown2.style.display = "none"
@@ -403,6 +411,7 @@ function hitPlayer2(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	countDeck(card)
 	deckCount.innerHTML = deck.length
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand2.push(card)
@@ -424,6 +433,7 @@ function splitDoubleCard(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	countDeck(card)
 	deckCount.innerHTML = deck.length
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand2.push(card)
@@ -468,6 +478,7 @@ function hitDealer(){
 		cardHolder.style.fontSize = '23px'
 		cardHolder.style.textAlign = 'center'
 		card = deck.pop()
+		countDeck(card)
 		deckCount.innerHTML = deck.length
 		cardHolder.innerHTML = card.Value + card.Suit
 		console.log(card)
@@ -516,6 +527,7 @@ function doubleDown(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	countDeck(card)
 	deckCount.innerHTML = deck.length
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand.push(card)
@@ -746,6 +758,64 @@ function renderDealer(){
 	}
 
 }
+
+function countDeck(card){
+	if(card.Value == "2"){
+		counter++
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "3"){
+		counter++
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "4"){
+		counter++
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "5"){
+		counter++
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "6"){
+		counter++
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "10"){
+		counter--
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "J"){
+		counter--
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "Q"){
+		counter--
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "K"){
+		counter--
+		theCount.innerHTML = counter
+		console.log(card.value)
+	
+	}else if(card.Value == "A"){
+		counter--
+		theCount.innerHTML = counter
+		console.log(card.value)
+	}else{
+		theCount.innerHTML = counter
+	}
+
+}
+
+
 
 // function splitHit(){
 // 	card = deck.pop()
