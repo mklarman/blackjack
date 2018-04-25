@@ -74,3 +74,12 @@
 	margin-left: 120px;
 	margin-top: -75px;
 }
+
+#playerPoints2{
+	height: 75px;
+	width: 75px;
+	border: 1px solid red;
+	margin-left: 20px;
+	margin-top: 0px;
+
+}
