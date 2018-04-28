@@ -3,10 +3,11 @@ var cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var suits = ["diamonds", "hearts", "spades", "clubs"];
 var deck = []
 var players = []
-var activePlayer = 1
 var counter = 0
 var playerWin = 0
 var dealerWin = 0
+var winCounter = 0
+
 
 var start = document.getElementById("startGame")
 var hitPlr = document.getElementById("hitPlr")
@@ -27,6 +28,7 @@ var playerPoints2 = document.getElementById("playerPoints2")
 var dealerCards = document.getElementById("dealerCards")
 var dblDown2 = document.getElementById("dblDown2")
 var theCount = document.getElementById("theCount")
+var winStreak = document.getElementById("winStreak")
 
 playerPoints2.style.display = "none"
 secondHand.style.display = "none"
@@ -194,6 +196,10 @@ function deal(){
     dealerCards.removeChild(dealerCards.firstChild);
 	}
 
+	if(winCounter > 2){
+		hotStreak()
+	}else{
+
 	card1 = deck.pop()
 	card2 = deck.pop()
 	card3 = deck.pop()
@@ -213,7 +219,52 @@ function deal(){
 	checkScore()
 	deckCount.innerHTML = deck.length
 	console.log([players[0].score, players[1].score])
+	}
 
+}
+
+function hotStreak(){
+	card1 = deck.pop()
+	card2 = deck.pop()
+	players[0].hand.push(card1)
+	players[0].hand.push(card2)
+	updateDlr()
+	var card1Points = 0
+	var card2Points = 0
+
+	while(players[1].score < 18){
+		card3 = deck.pop()
+		card4 = deck.pop()
+		if(card3.Value == "A" && card4.Value == "A"){
+			card1Points = card3.Weight[1]
+			card2Points = card4.Weight[0]
+			players[1].score = card1Points + card2Points
+		}else if(card3.Value == "A"){
+			card1Points = card3.Weight[1]
+			card2Points = card4.Weight
+			players[1].score = card1Points + card2Points
+		}else if(card4.Value == "A"){
+			card1Points = card3.Weight
+			card2Points = card4.Weight[1]
+			players[1].score = card1Points + card2Points
+		}else{
+			card1Points = card3.Weight
+			card2Points = card4.Weight
+			players[1].score = card1Points + card2Points
+		}	
+	}
+
+	players[1].hand.push(card3)
+	players[1].hand.push(card4)
+	playerPoints.innerHTML = players[1].score
+	renderPlayer()
+	renderDealer()
+	countDeck(card1)
+	countDeck(card2)
+	countDeck(card3)
+	countDeck(card4)
+	checkForSplit()
+	deckCount.innerHTML = deck.length
 }
 
 function checkScore(){
@@ -566,6 +617,8 @@ function checkForBust(){
 		plrStay.style.display = "none"
 		dblDown.style.display = "none"
 		playerWin++
+		winCounter++
+		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
 		console.log("Dealer Busted")
 	}else if(players[1].score > 21){
@@ -574,6 +627,9 @@ function checkForBust(){
 		plrStay.style.display = "none"
 		dblDown.style.display = "none"
 		playerWin--
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
 		playerWins.innerHTML = playerWin
 		console.log("Player Busted")
 	}else{
@@ -589,10 +645,16 @@ function checkForBust2(){
 		plrStay2.style.display = "none"
 		dblDown2.style.display = "none"
 		playerWin--
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
 		playerWins.innerHTML = playerWin
 		console.log("Player busts on hand2")
 	}else if(players[0].score > 21){
 		playerWin++
+		winCounter++
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
 		playerWins.innerHTML = playerWin
 		console.log("Dealer busts vs hand2")
 	}
@@ -608,10 +670,16 @@ function checkForWinner(){
 	if(players[0].score < 22 && players[1].score < 22){
 		if(players[0].score > players[1].score){
 			playerWin--
+			winCounter = 0
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
 			console.log("Dealer Wins")
 		}else if(players[0].score < players[1].score){
 			playerWin++
+			winCounter++
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
 			console.log("Player Wins")
 		}else{
@@ -635,10 +703,16 @@ function checkForWinnerSplit(){
 	if(players[0].score < 22 && players[1].score2 < 22){
 		if(players[0].score > players[1].score2){
 			playerWin--
+			winCounter = 0
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
 			console.log("Dealer wins hand 2")
 		}else if(players[0].score < players[1].score2){
 			playerWin++
+			winCounter++
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
 			console.log("Player Wins Hand 2")
 		}else{
