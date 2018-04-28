@@ -302,7 +302,7 @@ function checkScore(){
 	
 	players[0].score = card1 + card2
 	players[1].score = card3 + card4
-	dealerPoints.innerHTML = players[0].score
+	dealerPoints.innerHTML = card1
 	playerPoints.innerHTML = players[1].score
 	blackjack()
 
@@ -558,12 +558,14 @@ function stay(){
 		hitPlr2.style.display = "block"
 		plrStay2.style.display = "block"
 	}else{
+		renderedCardsD2.style.background = "white"
 	hitDealer()
 	}
 
 }
 
 function stay2(){
+	renderedCardsD2.style.background = "white"
 	hitDealer()
 }
 
@@ -813,21 +815,29 @@ function renderPlayer(){
 	}
 }
 
+var renderedCardsD1 = document.createElement("div")
+renderedCardsD1.style.height = '149px'
+renderedCardsD1.style.width = '149px'
+renderedCardsD1.style.border = '1px solid red'
+renderedCardsD1.style.display = 'inline-block'
+renderedCardsD1.style.fontSize = '23px'
+renderedCardsD1.style.textAlign = 'center'
+
+var renderedCardsD2 = document.createElement("div")
+renderedCardsD2.style.height = '149px'
+renderedCardsD2.style.width = '149px'
+renderedCardsD2.style.border = '1px solid red'
+renderedCardsD2.style.display = 'inline-block'
+renderedCardsD2.style.fontSize = '23px'
+renderedCardsD2.style.textAlign = 'center'
 
 function renderDealer(){
 	for(i=0; i<players[0].hand.length; i++){
-		renderedCardsD = document.createElement("div")
-		renderedCards.setAttribute("class", "renCards")
-		renderedCardsD.style.height = '149px'
-		renderedCardsD.style.width = '149px'
-		renderedCardsD.style.border = '1px solid red'
-		renderedCardsD.style.display = 'inline-block'
-		renderedCardsD.style.fontSize = '23px'
-		renderedCardsD.style.textAlign = 'center'
-		renderedCardsD.innerHTML = players[0].hand[i].Value + players[0].hand[i].Suit
-		
-		dealerCards.appendChild(renderedCardsD)
-		
+		renderedCardsD1.innerHTML = players[0].hand[0].Value + players[0].hand[0].Suit
+		renderedCardsD2.innerHTML = players[0].hand[1].Value + players[0].hand[1].Suit
+		dealerCards.appendChild(renderedCardsD1)
+		dealerCards.appendChild(renderedCardsD2)
+		renderedCardsD2.style.background = "black"
 
 	}
 
