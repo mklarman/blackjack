@@ -1,7 +1,12 @@
+body{
+	background: green;
+}
+
 #dealerCards{
 	height: 150px;
 	width: 100%;
 	border: 1px solid red;
+	background: white;
 }
 
 #playerCards{
@@ -9,6 +14,7 @@
 	width: 100%;
 	border: 1px solid red;
 	margin-top: 15px;
+	background: white;
 }
 
 #playerCards2{
@@ -16,6 +22,7 @@
 	width: 80%;
 	border: 1px solid red;
 	margin-top: 10px;
+	background: white;
 }
 
 #dealerPoints{
@@ -24,6 +31,8 @@
 	border: 1px solid red;
 	margin-left: 20px;
 	margin-top: 15px;
+	background: white;
+	font-size: 25px;
 }
 
 #playerPoints{
@@ -32,6 +41,8 @@
 	border: 1px solid red;
 	margin-left: 20px;
 	margin-top: 0px;
+	background: white;
+	font-size: 25px;
 }
 
 #deckCount{
@@ -40,12 +51,14 @@
 	border: 1px solid red;
 	margin-left: 400px;
 	margin-top: -220px;
+	background: blue;
+	color: white;
+	font-size: 25px;
 }
 
 #buttonContainer{
 	height: 170px;
 	width: 100px;
-	border: 1px solid red;
 	margin-top: 50px;
 
 }
@@ -64,13 +77,13 @@
 	border: 1px solid red;
 	margin-left: 100px;
 	margin-top: -75px;
+	background: white;
 
 }
 
 #dealerWins{
 	height: 75px;
 	width: 75px;
-	border: 1px solid red;
 	margin-left: 120px;
 	margin-top: -75px;
 }
@@ -81,16 +94,18 @@
 	border: 1px solid red;
 	margin-left: 20px;
 	margin-top: 0px;
+	background: white;
+	font-size: 25px;
 
 }
 
 #theCount{
-
 	height: 75px;
 	width: 75px;
-	border: 1px solid red;
 	margin-left: 450px;
 	margin-top: 0px;
+	color: white;
+	font-size: 25px;
 
 }
 
@@ -100,5 +115,8 @@
 	border: 1px solid red;
 	margin-left: 177px;
 	margin-top: -77px;
+	background: red;
+	color: white;
+	font-size: 25px;
 
 }

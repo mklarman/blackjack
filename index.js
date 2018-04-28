@@ -42,7 +42,6 @@ splitP.style.display = "none"
 dblDown2.style.display = "none"
 
 playerWins.innerHTML = playerWin
-dealerWins.innerHTML = dealerWin
 theCount.innerHTML = counter
 
 
@@ -53,7 +52,7 @@ function startGame(){
 	getDeck()
 	getDeck()
 	shuffle()
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	start.style.display = "none"
 	dealCards.style.display = "block"
 	
@@ -220,7 +219,7 @@ function deal(){
 	countDeck(card4)
 	checkForSplit()
 	checkScore()
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	console.log([players[0].score, players[1].score])
 	}
 
@@ -235,7 +234,7 @@ function hotStreak(){
 	var card1Points = 0
 	var card2Points = 0
 
-	while(players[1].score < 18){
+	while(players[1].score < 19){
 		card3 = deck.pop()
 		card4 = deck.pop()
 		if(card3.Value == "A" && card4.Value == "A"){
@@ -268,7 +267,7 @@ function hotStreak(){
 	countDeck(card4)
 	checkForSplit()
 	blackjack()
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 }
 
 function checkScore(){
@@ -433,8 +432,15 @@ function hitPlayer(){
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
 	countDeck(card)
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
+	if(card.Suit == "hearts" || card.Suit == "diamonds"){
+			cardHolder.style.background = "red"
+			cardHolder.style.color = "white"
+	}else{
+			cardHolder.style.background = "black"
+			cardHolder.style.color = "white"
+	}
 	players[1].hand.push(card)
 	playerCards.appendChild(cardHolder)
 	updatePly()
@@ -467,7 +473,7 @@ function hitPlayer2(){
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
 	countDeck(card)
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand2.push(card)
 	secondHand.appendChild(cardHolder)
@@ -489,7 +495,7 @@ function splitDoubleCard(){
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
 	countDeck(card)
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand2.push(card)
 	secondHand.appendChild(cardHolder)
@@ -536,7 +542,7 @@ function hitDealer(){
 		cardHolder.style.textAlign = 'center'
 		card = deck.pop()
 		countDeck(card)
-		deckCount.innerHTML = deck.length
+		deckCount.innerHTML = deck.length + " cards left"
 		cardHolder.innerHTML = card.Value + card.Suit
 		console.log(card)
 		players[0].hand.push(card)
@@ -558,6 +564,7 @@ function hitDealer(){
 	
 
 function stay(){
+	splitP.style.display = "none"
 	if(secondHand.style.display == "block"){
 		hitPlr.style.display = "none"
 		plrStay.style.display = "none"
@@ -587,7 +594,7 @@ function doubleDown(){
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
 	countDeck(card)
-	deckCount.innerHTML = deck.length
+	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand.push(card)
 	updatePly()
@@ -848,6 +855,14 @@ function renderPlayer(){
 		renderedCards.style.fontSize = '23px'
 		renderedCards.style.textAlign = 'center'
 		renderedCards.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit
+		if(players[1].hand[i].Suit == "hearts" || players[1].hand[i].Suit == "diamonds"){
+			renderedCards.style.background = "red"
+			renderedCards.style.color = "white"
+		}else{
+			renderedCards.style.background = "black"
+			renderedCards.style.color = "white"
+		}
+
 		playerCards.appendChild(renderedCards)
 	}
 }
