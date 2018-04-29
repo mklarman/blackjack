@@ -113,10 +113,38 @@ body{
 	height: 75px;
 	width: 75px;
 	border: 1px solid red;
-	margin-left: 177px;
-	margin-top: -77px;
+	margin-left: 185px;
+	margin-top: -75px;
 	background: red;
 	color: white;
 	font-size: 25px;
 
+}
+
+#scoreLabel{
+	height: 50px;
+	width: 80px;
+	background: white;
+	display: inline-block;
+	margin-left: 20px;
+
+}
+
+#unitLabel{
+	height: 50px;
+	width: 80px;
+	background: white;
+	display: inline-block;
+
+}
+
+#streakLabel{
+	height: 50px;
+	width: 80px;
+	background: white;
+	display: inline-block;
+	margin-left: 10px;
+	position: relative;
+	top: 18px;
+	right: 8px;
 }

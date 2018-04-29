@@ -29,6 +29,11 @@ var dealerCards = document.getElementById("dealerCards")
 var dblDown2 = document.getElementById("dblDown2")
 var theCount = document.getElementById("theCount")
 var winStreak = document.getElementById("winStreak")
+var scoreLabel = document.getElementById("scoreLabel")
+var unitLabel = document.getElementById("unitLabel")
+var streakLabel = document.getElementById("streakLabel")
+
+
 
 playerPoints2.style.display = "none"
 secondHand.style.display = "none"
@@ -43,6 +48,9 @@ dblDown2.style.display = "none"
 
 playerWins.innerHTML = playerWin
 theCount.innerHTML = counter
+scoreLabel.innerHTML = "SCORE"
+unitLabel.innerHTML = "+/-"
+streakLabel.innerHTML = "WIN STREAK"
 
 
 function startGame(){
@@ -237,6 +245,8 @@ function hotStreak(){
 	while(players[1].score < 19){
 		card3 = deck.pop()
 		card4 = deck.pop()
+		countDeck(card3)
+		countDeck(card4)
 		if(card3.Value == "A" && card4.Value == "A"){
 			card1Points = card3.Weight[1]
 			card2Points = card4.Weight[0]
@@ -263,8 +273,6 @@ function hotStreak(){
 	renderDealer()
 	countDeck(card1)
 	countDeck(card2)
-	countDeck(card3)
-	countDeck(card4)
 	checkForSplit()
 	blackjack()
 	deckCount.innerHTML = deck.length + " cards left"
