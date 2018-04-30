@@ -50,7 +50,7 @@ body{
 	width: 175px;
 	border: 1px solid red;
 	margin-left: 400px;
-	margin-top: -220px;
+	margin-top: -300px;
 	background: blue;
 	color: white;
 	font-size: 25px;
@@ -78,6 +78,7 @@ body{
 	margin-left: 100px;
 	margin-top: -75px;
 	background: white;
+	font-size: 25px;
 
 }
 
@@ -127,6 +128,7 @@ body{
 	background: white;
 	display: inline-block;
 	margin-left: 20px;
+	margin-top: 50px;
 
 }
 
@@ -147,4 +149,14 @@ body{
 	position: relative;
 	top: 18px;
 	right: 8px;
+}
+
+#message{
+	height: 180px;
+	width: 660px;
+	margin-left: 500px;
+	background: white;
+	position: relative;
+	right: 200px;
+	font-size: 27px;
 }

@@ -32,6 +32,7 @@ var winStreak = document.getElementById("winStreak")
 var scoreLabel = document.getElementById("scoreLabel")
 var unitLabel = document.getElementById("unitLabel")
 var streakLabel = document.getElementById("streakLabel")
+var message = document.getElementById("message")
 
 
 
@@ -63,6 +64,7 @@ function startGame(){
 	deckCount.innerHTML = deck.length + " cards left"
 	start.style.display = "none"
 	dealCards.style.display = "block"
+	message.innerHTML = "Click Deal to play Blackjack!"
 	
 }
 
@@ -230,10 +232,13 @@ function deal(){
 	deckCount.innerHTML = deck.length + " cards left"
 	console.log([players[0].score, players[1].score])
 	}
+	message.innerHTML = "Hit, Stay, or Double"
 
 }
 
 function hotStreak(){
+
+	setInterval(showBlink, 1000);
 	card1 = deck.pop()
 	card2 = deck.pop()
 	players[0].hand.push(card1)
@@ -434,7 +439,7 @@ function hitPlayer(){
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
 	cardHolder.style.width = '149px'
-	cardHolder.style.border = '1px solid red'
+	cardHolder.style.border = '1px solid white'
 	cardHolder.style.display = 'inline-block'
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
@@ -475,7 +480,7 @@ function hitPlayer2(){
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
 	cardHolder.style.width = '149px'
-	cardHolder.style.border = '1px solid red'
+	cardHolder.style.border = '1px solid white'
 	cardHolder.style.display = 'inline-block'
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
@@ -537,14 +542,24 @@ function renderHitForPlr(){
 }
 
 function hitDealer(){
-	renderedCardsD2.style.background = "white"
+	
+
+	if(players[0].hand[1].Suit == "hearts" || players[0].hand[1].Suit =="diamonds"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+	}else{
+			renderedCardsD2.style.background = "black"
+			renderedCardsD2.style.color = "white"
+	}
+	
 	dealerPoints.innerHTML = players[0].score
+	
 	while(players[0].score < 17 && players[0].score > 0){
 		var cardHolder = document.createElement("div") 
 		cardHolder.setAttribute("class", "renCards")
 		cardHolder.style.height = '149px'
 		cardHolder.style.width = '149px'
-		cardHolder.style.border = '1px solid red'
+		cardHolder.style.border = '1px solid white'
 		cardHolder.style.display = 'inline-block'
 		cardHolder.style.fontSize = '23px'
 		cardHolder.style.textAlign = 'center'
@@ -552,6 +567,14 @@ function hitDealer(){
 		countDeck(card)
 		deckCount.innerHTML = deck.length + " cards left"
 		cardHolder.innerHTML = card.Value + card.Suit
+		if(card.Suit == "hearts" || card.Suit =="diamonds"){
+			cardHolder.style.background = "red"
+			cardHolder.style.color = "white"
+
+		}else{
+			cardHolder.style.background = "black"
+			cardHolder.style.color = "white"
+		}
 		console.log(card)
 		players[0].hand.push(card)
 		updateDlr()
@@ -596,11 +619,18 @@ function doubleDown(){
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
 	cardHolder.style.width = '149px'
-	cardHolder.style.border = '1px solid red'
+	cardHolder.style.border = '1px solid white'
 	cardHolder.style.display = 'inline-block'
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	if(card.Suit == "hearts" || card.Suit =="diamonds"){
+			cardHolder.style.background = "red"
+			cardHolder.style.color = "white"
+	}else{
+			cardHolder.style.background = "black"
+			cardHolder.style.color = "white"
+	}
 	countDeck(card)
 	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
@@ -653,7 +683,14 @@ function checkForBust(){
 			players[1].hand2.length = 0
 		}
 	}else if(players[1].score > 21){
-		renderedCardsD2.style.background = "white"
+		if(players[0].hand[1].Suit == "hearts" || players[0].hand[1].Suit == "diamonds" ){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+		}else{
+			renderedCardsD2.style.background = "black"
+			renderedCardsD2.style.color = "white"
+
+		}
 		dealCards.style.display = "block"
 		hitPlr.style.display = "none"
 		plrStay.style.display = "none"
@@ -858,7 +895,7 @@ function renderPlayer(){
 		renderedCards.setAttribute("class", "renCards")
 		renderedCards.style.height = '149px'
 		renderedCards.style.width = '149px'
-		renderedCards.style.border = '1px solid red'
+		renderedCards.style.border = '1px solid white'
 		renderedCards.style.display = 'inline-block'
 		renderedCards.style.fontSize = '23px'
 		renderedCards.style.textAlign = 'center'
@@ -878,7 +915,7 @@ function renderPlayer(){
 var renderedCardsD1 = document.createElement("div")
 renderedCardsD1.style.height = '149px'
 renderedCardsD1.style.width = '149px'
-renderedCardsD1.style.border = '1px solid red'
+renderedCardsD1.style.border = '1px solid white'
 renderedCardsD1.style.display = 'inline-block'
 renderedCardsD1.style.fontSize = '23px'
 renderedCardsD1.style.textAlign = 'center'
@@ -886,7 +923,7 @@ renderedCardsD1.style.textAlign = 'center'
 var renderedCardsD2 = document.createElement("div")
 renderedCardsD2.style.height = '149px'
 renderedCardsD2.style.width = '149px'
-renderedCardsD2.style.border = '1px solid red'
+renderedCardsD2.style.border = '1px solid white'
 renderedCardsD2.style.display = 'inline-block'
 renderedCardsD2.style.fontSize = '23px'
 renderedCardsD2.style.textAlign = 'center'
@@ -895,9 +932,19 @@ function renderDealer(){
 	for(i=0; i<players[0].hand.length; i++){
 		renderedCardsD1.innerHTML = players[0].hand[0].Value + players[0].hand[0].Suit
 		renderedCardsD2.innerHTML = players[0].hand[1].Value + players[0].hand[1].Suit
+		renderedCardsD2.style.background = "blue"
+		renderedCardsD2.style.color = "blue"
+
+		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
+			renderedCardsD1.style.background = "red"
+			renderedCardsD1.style.color = "white"
+		}else{
+			renderedCardsD1.style.background = "black"
+			renderedCardsD1.style.color = "white"
+		}
+
 		dealerCards.appendChild(renderedCardsD1)
 		dealerCards.appendChild(renderedCardsD2)
-		renderedCardsD2.style.background = "black"
 
 	}
 
@@ -957,6 +1004,16 @@ function countDeck(card){
 		theCount.innerHTML = counter
 	}
 
+}
+
+function eraseBlink(){
+	message.innerHTML = " "
+}
+
+function showBlink() {
+	message.innerHTML = "You Are On FIRE!"
+
+	setTimeout(eraseBlink, 2000)
 }
 
 
