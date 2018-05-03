@@ -43,6 +43,8 @@ body{
 	margin-top: 0px;
 	background: white;
 	font-size: 25px;
+	position: relative;
+	bottom: 3px;
 }
 
 #deckCount{
@@ -79,7 +81,9 @@ body{
 	margin-top: -75px;
 	background: white;
 	font-size: 25px;
-
+	position: relative;
+	bottom: 5px;
+	left: 5px;
 }
 
 #dealerWins{
@@ -119,6 +123,9 @@ body{
 	background: red;
 	color: white;
 	font-size: 25px;
+	position: relative;
+	bottom: 6px;
+	left: 4px;
 
 }
 
@@ -129,6 +136,8 @@ body{
 	display: inline-block;
 	margin-left: 20px;
 	margin-top: 50px;
+	position: relative;
+	top: 170px;
 
 }
 
@@ -137,6 +146,8 @@ body{
 	width: 80px;
 	background: white;
 	display: inline-block;
+	position: relative;
+	top: 170px;
 
 }
 
@@ -147,8 +158,9 @@ body{
 	display: inline-block;
 	margin-left: 10px;
 	position: relative;
-	top: 18px;
+	top: 189px;
 	right: 8px;
+
 }
 
 #message{
@@ -158,5 +170,6 @@ body{
 	background: white;
 	position: relative;
 	right: 200px;
+	top: 82px;
 	font-size: 27px;
 }

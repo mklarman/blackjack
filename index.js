@@ -52,6 +52,7 @@ theCount.innerHTML = counter
 scoreLabel.innerHTML = "SCORE"
 unitLabel.innerHTML = "+/-"
 streakLabel.innerHTML = "WIN STREAK"
+message.innerHTML = "Welcome to Big Al's blackjack!<br><br>Win three hands in a row and enter into the fire round where you are dealt 19 or better until you lose."
 
 
 function startGame(){
@@ -166,6 +167,7 @@ function shuffleCheck(){
 }
 
 function deal(){
+	
 	players[1].score2 = 0
 	if(players[1].hand2){
 		players[1].hand2.length = 0
@@ -209,6 +211,8 @@ function deal(){
 	}
 
 	if(winCounter > 2){
+		message.innerHTML = " "
+		blinking()
 		hotStreak()
 	}else{
 
@@ -229,16 +233,22 @@ function deal(){
 	countDeck(card4)
 	checkForSplit()
 	checkScore()
+	if(players[1].hand[0].Value == players[1].hand[1].Value){
+		message.innerHTML = "You have " + players[1].score + "." + " Hit, Stay, Double, or Split."
+	}else{
+		message.innerHTML = "You have " + players[1].score + "." + " Hit, Stay, or Double."
+	}
 	deckCount.innerHTML = deck.length + " cards left"
 	console.log([players[0].score, players[1].score])
 	}
-	message.innerHTML = "Hit, Stay, or Double"
+
 
 }
 
-function hotStreak(){
 
-	setInterval(showBlink, 1000);
+
+function hotStreak(){
+	blinking()
 	card1 = deck.pop()
 	card2 = deck.pop()
 	players[0].hand.push(card1)
@@ -465,6 +475,7 @@ function hitPlayer(){
 		plrStay2.style.display = "block"
 		dblDown2.style.display = "block"
 	}
+	message.innerHTML = "You have " + players[1].score + "." + " Hit or Stay."
 }
 
 
@@ -491,8 +502,16 @@ function hitPlayer2(){
 	players[1].hand2.push(card)
 	secondHand.appendChild(cardHolder)
 	updatePly2()
+
 	if(players[1].score2 > 21){
 	checkForBust2()
+	}
+
+	if(players[1].hand2[0].Value == players[1].hand2[1].Value){
+	message.innerHTML = "You have " + players[1].score2 + "." + "Hit, Stay, or Double"
+	}else{
+		message.innerHTML = "You have " + players[1].score2 + "." + "Hit or Stay"
+
 	}
 }
 
@@ -579,6 +598,7 @@ function hitDealer(){
 		players[0].hand.push(card)
 		updateDlr()
 		dealerCards.appendChild(cardHolder)
+		message.innerHTML = "Dealer has " + players[0].score + "."
 	}
 	if(players[0].score > 21){
 		checkForBust()
@@ -1006,21 +1026,40 @@ function countDeck(card){
 
 }
 
-function eraseBlink(){
+
+var blink_message = document.createElement("div")
+
+function blinking(){
+	console.log("In function blinking")
+	blink_message.style.height = "100px"
+	blink_message.style.width = "300px"
+	blink_message.style.fontSize = "30px"
+	blink_message.style.textAlign = "center"
+	blink_message.style.color = "red"
+	blink_message.style.margin = "auto"
+	blink_message.innerHTML = "You're On Fire!!!"
 	message.innerHTML = " "
+
+
+	message.appendChild(blink_message)
+	blingMess()
 }
 
-function showBlink() {
-	message.innerHTML = "You Are On FIRE!"
-
-	setTimeout(eraseBlink, 2000)
+function blingMess(){
+	var blink_speed = 500;
+	var t = setInterval(function () {
+	     blink_message.style.visibility = (blink_message.style.visibility == 'hidden' ? '' : 'hidden');
+	}, blink_speed);
 }
 
 
 
-// function splitHit(){
-// 	card = deck.pop()
-// 	players[1].hand2.push(card)
+
+
+
+
+
+	// players[1].hand2.push(card)
 // 	updatePly2()
 // 	}else{
 // 		players[1].hand.push(card)
