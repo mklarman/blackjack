@@ -7,6 +7,7 @@ var counter = 0
 var playerWin = 0
 var dealerWin = 0
 var winCounter = 0
+var handNum = 0
 
 
 var start = document.getElementById("startGame")
@@ -52,10 +53,20 @@ theCount.innerHTML = counter
 scoreLabel.innerHTML = "SCORE"
 unitLabel.innerHTML = "+/-"
 streakLabel.innerHTML = "WIN STREAK"
-message.innerHTML = "Welcome to Big Al's blackjack!<br><br>Win three hands in a row and enter into the fire round where you are dealt 19 or better until you lose."
+message.innerHTML = "Open seat here!"
+setTimeout(function(){ message.innerHTML = "I said, open seat right here!"; }, 2000);
+setTimeout(function(){ message.innerHTML = "Only one seat open!  Grab it while it's hot!"; }, 4000);
+setTimeout(function(){ message.innerHTML = "Hit start to claim the seat.  Don't be scared."; }, 7000);
 
 
 function startGame(){
+	message.innerHTML = "Welcome to my blackjack game..."
+	setTimeout(function(){ message.innerHTML = "...here are the rules:"; }, 2000);
+	setTimeout(function(){ message.innerHTML = "Standard blackjack rules apply but..."; }, 4000);
+	setTimeout(function(){ message.innerHTML = "There is a bonus round that you enter if you win three hands in a row."; }, 8000);
+	setTimeout(function(){ message.innerHTML = "In the bonus round you are dealt 19 or better until the dealer beats you."; }, 12000);
+	setTimeout(function(){ message.innerHTML = "It's a race to twenty units.  If you win twenty, then you win.  If you lose twenty units, I win."; }, 17000);
+	setTimeout(function(){ message.innerHTML = "A lot of people a whole lot braver than you walked away without clicking that deal button."; }, 21000);
 	createPlayers(1)
 	getDeck()
 	getDeck()
@@ -65,7 +76,6 @@ function startGame(){
 	deckCount.innerHTML = deck.length + " cards left"
 	start.style.display = "none"
 	dealCards.style.display = "block"
-	message.innerHTML = "Click Deal to play Blackjack!"
 	
 }
 
@@ -115,6 +125,7 @@ function createPlayers(num){
 		if(player.name == "player1"){
 			player.name = "Me"
 			player.score2 = 0
+			player.hand2 = []
 		}
 	}
 	return players
@@ -167,11 +178,10 @@ function shuffleCheck(){
 }
 
 function deal(){
-	
+
+	handNum++
 	players[1].score2 = 0
-	if(players[1].hand2){
-		players[1].hand2.length = 0
-	}
+	players[1].hand2.length = 0
 	playerPoints2.style.display = "none"
 	hitCounter = 0
 	dealCards.style.display = "none"
@@ -184,18 +194,13 @@ function deal(){
 	hitPlr2.style.display = "none"
 	splitP.style.display = "none"
 
-	if(deck.length < 15){
+	if(deck.length < 11){
 		shuffleCheck()
 	}
 
 	for(i = 0; i<players.length; i++){
 		players[i].score = 0
 		players[i].hand.length = 0
-	}
-
-	if(players[1].hand2){
-		players[1].hand2.length = 0
-		players[1].score2 = 0
 	}
 
 	while (playerCards.firstChild) {
@@ -233,12 +238,42 @@ function deal(){
 	countDeck(card4)
 	checkForSplit()
 	checkScore()
-	if(players[1].hand[0].Value == players[1].hand[1].Value){
-		message.innerHTML = "You have " + players[1].score + "." + " Hit, Stay, Double, or Split."
-	}else{
-		message.innerHTML = "You have " + players[1].score + "." + " Hit, Stay, or Double."
-	}
 	deckCount.innerHTML = deck.length + " cards left"
+	if(handNum == 1){
+		message.innerHTML = "I buy yachts cause people like you think they can win."
+		setTimeout(function(){ 
+		message.innerHTML = "You have " + players[1].score + " the dealer shows " + players[0].hand[0].Value + ".  What you wanna do?"
+
+		; }, 4000);
+	}else if(handNum == 2){
+		message.innerHTML = "Did I say yachts?  I meant luxury cruise liners."
+		setTimeout(function(){ 
+		message.innerHTML = "You have " + players[1].score + " the dealer shows " + players[0].hand[0].Value + ".  What you wanna do?"
+
+		; }, 4000);
+	}else if(handNum == 3){
+		message.innerHTML = "You got any pictures of your wife?"
+		setTimeout(function(){ message.innerHTML = "Maybe we can find a way for her to knock something off your tab if you lose."; }, 2000);
+		setTimeout(function(){ message.innerHTML = "Know what I mean?"; }, 5500);
+		setTimeout(function(){ 
+		message.innerHTML = "You have " + players[1].score + " the dealer shows " + players[0].hand[0].Value + ".  What you wanna do?"
+
+		; }, 7000);
+
+	}else if(handNum == 4){
+		message.innerHTML = "Why don't you just give me half of the money you have on you, I'll kick you in the nuts, and we'll call it even."
+		setTimeout(function(){ 
+		message.innerHTML = "You have " + players[1].score + " the dealer shows " + players[0].hand[0].Value + ".  What you wanna do?"
+
+		; }, 4000);
+	}else{
+		message.innerHTML = "Make your move..."
+		setTimeout(function(){ 
+		message.innerHTML = "You have " + players[1].score + " the dealer shows " + players[0].hand[0].Value + ".  What you wanna do?"
+
+		; }, 2000);
+	}
+	
 	console.log([players[0].score, players[1].score])
 	}
 
@@ -248,7 +283,6 @@ function deal(){
 
 
 function hotStreak(){
-	blinking()
 	card1 = deck.pop()
 	card2 = deck.pop()
 	players[0].hand.push(card1)
@@ -398,7 +432,7 @@ function updatePly2(){
 	players[1].score2 = pointsP2
 	playerPoints2.innerHTML = players[1].score2
 
-	if(players[1].hand2.length > 2){
+	if(players[1].score2 > 21){
 		checkForBust2()
 	}
 }
@@ -441,7 +475,7 @@ function add(a, b) {
 }
 
 function hitPlayer(){
-	if(players[1].hand.length > 1){
+	if(players[1].hand.length == 1){
 		dblDown.style.display = "none"
 	}
 	splitP.style.dislay = "none"
@@ -468,20 +502,13 @@ function hitPlayer(){
 	playerCards.appendChild(cardHolder)
 	updatePly()
 	checkForBust()
-	if(players[1].score > 21 && players[1].score2 !== 0){
-		hitPlr2.style.display = "block"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		plrStay2.style.display = "block"
-		dblDown2.style.display = "block"
-	}
-	message.innerHTML = "You have " + players[1].score + "." + " Hit or Stay."
 }
 
 
 function hitPlayer2(){
-	dblDown.style.display = "none"
 	if(players[1].hand2.length < 2){
+		dblDown2.style.display = "none"
+	}else if(players[1].hand2.length == 2){
 		dblDown2.style.display = "block"
 	}else{
 		dblDown2.style.display = "none"
@@ -499,20 +526,17 @@ function hitPlayer2(){
 	countDeck(card)
 	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
+	if(card.Suit == "hearts" || card.Suit == "diamonds"){
+			cardHolder.style.background = "red"
+			cardHolder.style.color = "white"
+	}else{
+			cardHolder.style.background = "black"
+			cardHolder.style.color = "white"
+	}
 	players[1].hand2.push(card)
 	secondHand.appendChild(cardHolder)
 	updatePly2()
-
-	if(players[1].score2 > 21){
 	checkForBust2()
-	}
-
-	if(players[1].hand2[0].Value == players[1].hand2[1].Value){
-	message.innerHTML = "You have " + players[1].score2 + "." + "Hit, Stay, or Double"
-	}else{
-		message.innerHTML = "You have " + players[1].score2 + "." + "Hit or Stay"
-
-	}
 }
 
 function splitDoubleCard(){
@@ -545,20 +569,7 @@ function splitDoubleCard(){
 
 }
 
-function renderHitForPlr(){
-	for(i=2; i<players[1].hand.length; i++){
-		var hitCard = document.createElement("div")
-		hitCard.setAttribute("class", "renCards")
-		hitCard.style.height = '149px'
-		hitCard.style.width = '149px'
-		hitCard.style.border = '1px solid red'
-		hitCard.style.display = 'inline-block'
-		hitCard.style.fontSize = '23px'
-		hitCard.style.textAlign = 'center'
-		hitCard.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit 
 
-	}
-}
 
 function hitDealer(){
 	
@@ -600,9 +611,7 @@ function hitDealer(){
 		dealerCards.appendChild(cardHolder)
 		message.innerHTML = "Dealer has " + players[0].score + "."
 	}
-	if(players[0].score > 21){
-		checkForBust()
-	}
+	checkForBust()
 	checkForPush()
 	checkForWinner()
 	
@@ -694,37 +703,51 @@ function checkForBust(){
 		hitPlr.style.display = "none"
 		plrStay.style.display = "none"
 		dblDown.style.display = "none"
+		splitP.style.display = "none"
+		hitPlr2.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown2.style.display = "none"
+		splitP.style.display = "none"
 		playerWin++
 		winCounter++
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
 		console.log("Dealer Busted")
-		if(players[1].hand2){
-			players[1].hand2.length = 0
-		}
 	}else if(players[1].score > 21){
-		if(players[0].hand[1].Suit == "hearts" || players[0].hand[1].Suit == "diamonds" ){
-			renderedCardsD2.style.background = "red"
-			renderedCardsD2.style.color = "white"
+		if(players[1].hand2.length > 0){
+			dealCards.style.display = "none"
+			hitPlr2.style.display = "block"
+			plrStay2.style.display = "block"
+			dblDown2.style.display = "block"
+			hitPlr.style.display = "none"
+			plrStay.style.display = "none"
+			dblDown.style.display = "none"
+			playerWin--
+			winCounter = 0
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
+			message.innerHTML = "You busted on your first hand." + " You have " + players[1].score2 + " " + "on hand 2."
+
 		}else{
-			renderedCardsD2.style.background = "black"
-			renderedCardsD2.style.color = "white"
+
+			dealCards.style.display = "block"
+			hitPlr2.style.display = "none"
+			plrStay2.style.display = "none"
+			dblDown2.style.display = "none"
+			hitPlr.style.display = "none"
+			plrStay.style.display = "none"
+			dblDown.style.display = "none"
+			playerWin--
+			winCounter = 0
+			winStreak.innerHTML = winCounter
+			playerWins.innerHTML = playerWin
+			message.innerHTML = "You busted."
 
 		}
-		dealCards.style.display = "block"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		dblDown.style.display = "none"
-		playerWin--
-		winCounter = 0
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
-		playerWins.innerHTML = playerWin
-		console.log("Player Busted")
 	}else{
-		console.log("No one has busted")
+		message.innerHTML = "You have " + players[1].score + "." + " Dealer shows a " + players[0].hand[0].Value + "."
 	}
-	
+		
 }
 
 function checkForBust2(){
@@ -739,14 +762,16 @@ function checkForBust2(){
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
 		playerWins.innerHTML = playerWin
-		console.log("Player busts on hand2")
+		message.innerHTML = "You busted on hand2."
+		if(players[1].score < 22){
+			hitDealer()
+		}
 	}else if(players[0].score > 21){
 		playerWin++
 		winCounter++
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
 		playerWins.innerHTML = playerWin
-		console.log("Dealer busts vs hand2")
 	}
 	
 }
@@ -831,21 +856,33 @@ function checkForPush2(){
 
 
 function splitBustCheck(){
-	if(players[1].score > 21){
-		console.log("You busted on hand 1")
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		dblDown.style.display = "none"
-		dblDown2.style.display = "block"
-		plrStay2.style.display = "block"
-		hitPlr2.style.display = "block"
-		splitP.style.display = "none"
-		dealCards.style.display = "none"
+	// if(players[1].score > 21){
+	// 	console.log("You busted on hand 1")
+	// 	hitPlr.style.display = "none"
+	// 	plrStay.style.display = "none"
+	// 	dblDown.style.display = "none"
+	// 	dblDown2.style.display = "block"
+	// 	plrStay2.style.display = "block"
+	// 	hitPlr2.style.display = "block"
+	// 	splitP.style.display = "none"
+	// 	dealCards.style.display = "none"
 
-	}
+	// }
 	if(players[1].score2 > 21){
 		console.log("you busted on hand 2")
-		renderedCardsD2.style.background = "white"
+		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+		}else{
+			renderedCardsD2.style.color = "white"
+			renderedCardsD2.style.background = "black"
+		}
+		if(players[1].score < 22){
+			hitDealer()
+		}else{
+			message.innerHTML = "Dealer wins vs both hands"
+
+		}
 		players[1].hand2.length = 0
 	
 		dealCards.style.display = "block"
@@ -1257,5 +1294,18 @@ function blingMess(){
 // 	}
 
 // }
+// function renderHitForPlr(){
+// 	for(i=2; i<players[1].hand.length; i++){
+// 		var hitCard = document.createElement("div")
+// 		hitCard.setAttribute("class", "renCards")
+// 		hitCard.style.height = '149px'
+// 		hitCard.style.width = '149px'
+// 		hitCard.style.border = '1px solid red'
+// 		hitCard.style.display = 'inline-block'
+// 		hitCard.style.fontSize = '23px'
+// 		hitCard.style.textAlign = 'center'
+// 		hitCard.innerHTML = players[1].hand[i].Value + players[1].hand[i].Suit 
 
+// 	}
+// }
 
