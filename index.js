@@ -60,6 +60,7 @@ setTimeout(function(){ message.innerHTML = "Hit start to claim the seat.  Don't 
 
 
 function startGame(){
+	dealCards.style.display = "none"
 	message.innerHTML = "Welcome to my blackjack game..."
 	setTimeout(function(){ message.innerHTML = "...here are the rules:"; }, 2000);
 	setTimeout(function(){ message.innerHTML = "Standard blackjack rules apply but..."; }, 4000);
@@ -67,6 +68,7 @@ function startGame(){
 	setTimeout(function(){ message.innerHTML = "In the bonus round you are dealt 19 or better until the dealer beats you."; }, 12000);
 	setTimeout(function(){ message.innerHTML = "It's a race to twenty units.  If you win twenty, then you win.  If you lose twenty units, I win."; }, 17000);
 	setTimeout(function(){ message.innerHTML = "A lot of people a whole lot braver than you walked away without clicking that deal button."; }, 21000);
+	setTimeout(function(){ dealCards.style.display = "block"; }, 22000);
 	createPlayers(1)
 	getDeck()
 	getDeck()
@@ -75,7 +77,6 @@ function startGame(){
 	shuffle()
 	deckCount.innerHTML = deck.length + " cards left"
 	start.style.display = "none"
-	dealCards.style.display = "block"
 	
 }
 
@@ -162,7 +163,6 @@ function shuffle(){
 		deck[location1] = deck[location2];
 		deck[location2] = tmp;
 	}
-	dealCards.style.display = "block"
 	
 }
 
@@ -506,13 +506,6 @@ function hitPlayer(){
 
 
 function hitPlayer2(){
-	if(players[1].hand2.length < 2){
-		dblDown2.style.display = "none"
-	}else if(players[1].hand2.length == 2){
-		dblDown2.style.display = "block"
-	}else{
-		dblDown2.style.display = "none"
-	}
 	splitP.style.display = "none"
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
@@ -615,7 +608,7 @@ function hitDealer(){
 	checkForPush()
 	checkForWinner()
 	
-	if(players[1].score2 !== 0){
+	if(players[1].hand2.length > 0){
 		checkForBust2()
 		checkForPush2()
 		checkForWinnerSplit()
@@ -638,7 +631,14 @@ function stay(){
 }
 
 function stay2(){
-	renderedCardsD2.style.background = "white"
+	if(players[0].hand[0].Suit == "hearts" || players[0].hand[0].Suit == "hearts"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+
+	}else{
+			renderedCardsD1.style.background = "black"
+			renderedCardsD1.style.color = "white"
+	}
 	hitDealer()
 }
 
@@ -678,19 +678,46 @@ function doubleDown(){
 function blackjack(){
 
 	if(players[1].score == 21 && players[0].score == 21){
-		console.log("It's a push")
 		checkForPush()
-		renderedCardsD2.style.background = "white"
 		dealerPoints.innerHTML = players[0].score
+		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
+			renderedCardsD1.style.background = "red"
+			renderedCardsD1.style.color = "white"
+		}else{
+			renderedCardsD1.style.color = "white"
+			renderedCardsD1.style.background = "black"
+		}
+		if(players[0].hand[1].Suit == "hearts" || "diamonds"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+		}else{
+			renderedCardsD2.style.color = "white"
+			renderedCardsD2.style.background = "black"
+		}
+
 	}else if(players[1].score == 21){
 		checkForWinner()
-		console.log("Player has blackjack!")
+		message.innerHTML = "Shit.  That won't keep up.  I hope."
 		dealerPoints.innerHTML = players[0].score
 	}else if(players[0].score == 21){
 		checkForWinner()
-		renderedCardsD2.style.background = "white"
 		dealerPoints.innerHTML = players[0].score
-		console.log("Dealer has blackjack!")
+		message.innerHTML = "Yeah boy!  How's my blackjack taste?"
+		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
+			renderedCardsD1.style.background = "red"
+			renderedCardsD1.style.color = "white"
+		}else{
+			renderedCardsD1.style.color = "white"
+			renderedCardsD1.style.background = "black"
+		}
+		if(players[0].hand[1].Suit == "hearts" || "diamonds"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+		}else{
+			renderedCardsD2.style.color = "white"
+			renderedCardsD2.style.background = "black"
+		}
+		
 	}else{
 		console.log("No blackjack")
 	}
@@ -712,8 +739,8 @@ function checkForBust(){
 		winCounter++
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
-		console.log("Dealer Busted")
-	}else if(players[1].score > 21){
+		message.innerHTML = "I broke, fuck."
+	}if(players[1].score > 21){
 		if(players[1].hand2.length > 0){
 			dealCards.style.display = "none"
 			hitPlr2.style.display = "block"
@@ -726,28 +753,28 @@ function checkForBust(){
 			winCounter = 0
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
-			message.innerHTML = "You busted on your first hand." + " You have " + players[1].score2 + " " + "on hand 2."
+			message.innerHTML = "Looks like you broke like the spineless coward you are on hand 1, pal." + " You have " + players[1].score2 + " " + "on hand 2. What are you gonna do?"
 
 		}else{
 
-			dealCards.style.display = "block"
+			playerPoints2.style.display = "none"
+			secondHand.style.display = "none"
 			hitPlr2.style.display = "none"
-			plrStay2.style.display = "none"
-			dblDown2.style.display = "none"
 			hitPlr.style.display = "none"
 			plrStay.style.display = "none"
+			plrStay2.style.display = "none"
 			dblDown.style.display = "none"
+			dealCards.style.display = "block"
+			splitP.style.display = "none"
+			dblDown2.style.display = "none"
 			playerWin--
 			winCounter = 0
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
-			message.innerHTML = "You busted."
+			message.innerHTML = "If this game was called " + players[1].score + " and not 21, you'd be a winner."
 
-		}
-	}else{
-		message.innerHTML = "You have " + players[1].score + "." + " Dealer shows a " + players[0].hand[0].Value + "."
+		}	
 	}
-		
 }
 
 function checkForBust2(){
@@ -761,20 +788,40 @@ function checkForBust2(){
 		winCounter = 0
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
-		playerWins.innerHTML = playerWin
-		message.innerHTML = "You busted on hand2."
-		if(players[1].score < 22){
+		message.innerHTML = "Looks like " + players[1].score2 + " is more than 21 now isn't it?"
+		if (players[1].score < 21){
 			hitDealer()
+		}else{
+		
+			while (dealerCards.firstChild) {
+    		dealerCards.removeChild(dealerCards.firstChild);
+			}
+		
+			for(i=0; i<players[0].hand.length; i++){
+				var cardHolder = document.createElement("div") 
+				cardHolder.setAttribute("class", "renCards")
+				cardHolder.style.height = '149px'
+				cardHolder.style.width = '149px'
+				cardHolder.style.border = '1px solid white'
+				cardHolder.style.display = 'inline-block'
+				cardHolder.style.fontSize = '23px'
+				cardHolder.style.textAlign = 'center'
+				cardHolder.innerHTML = players[0].hand[i].Value + " " + players[0].hand[i].Suit
+				dealerCards.appendChild(cardHolder)
+
+				if(players[0].hand[i].Suit == "hearts" || players[0].hand[i].Suit == "diamonds"){
+					cardHolder.style.background = "red"
+					cardHolder.style.color = "white"
+				}else{
+					cardHolder.style.background = "black"
+					cardHolder.style.color = "white"
+				}
+			}
 		}
-	}else if(players[0].score > 21){
-		playerWin++
-		winCounter++
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
-		playerWins.innerHTML = playerWin
-	}
 	
+	}
 }
+
 
 function checkForWinner(){
 	dealCards.style.display = "block"
@@ -789,14 +836,14 @@ function checkForWinner(){
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
-			console.log("Dealer Wins")
+			message.innerHTML = "I'll take this one, thanks."
 		}else if(players[0].score < players[1].score){
 			playerWin++
 			winCounter++
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
-			console.log("Player Wins")
+			message.innerHTML = "I'll give you this one cause I don't want you to quit me."
 		}else{
 			checkForPush()
 		}
@@ -822,16 +869,15 @@ function checkForWinnerSplit(){
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
-			console.log("Dealer wins hand 2")
-		}else if(players[0].score < players[1].score2){
+			message.innerHTML = "Looks like Big Al is gonna take this one."
+		}if(players[0].score < players[1].score2){
 			playerWin++
 			winCounter++
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
-			console.log("Player Wins Hand 2")
-		}else{
-			checkForPush2()
+			message.innerHTML = "Take this one and be happy."
+			
 		}
 		
 	}
@@ -870,13 +916,7 @@ function splitBustCheck(){
 	// }
 	if(players[1].score2 > 21){
 		console.log("you busted on hand 2")
-		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
-			renderedCardsD2.style.background = "red"
-			renderedCardsD2.style.color = "white"
-		}else{
-			renderedCardsD2.style.color = "white"
-			renderedCardsD2.style.background = "black"
-		}
+		
 		if(players[1].score < 22){
 			hitDealer()
 		}else{
@@ -907,7 +947,6 @@ function checkForSplit(){
 
 function splitCards(){
 	splitP.style.display = "none"
-	players[1].hand2 = []
 	card = players[1].hand.pop()
 	players[1].hand2.push(card)
 	playerCards.removeChild(playerCards.childNodes[1]);
@@ -922,6 +961,13 @@ function splitCards(){
 	secondHand.style.display = "block"
 	playerPoints2.style.display = "block"
 	secondHand.appendChild(newHand)
+	if(players[1].hand2[0].Suit == "hearts" || players[1].hand2[0].Suit == "diamonds"){
+			newHand.style.background = "red"
+			newHand.style.color = "white"
+	}else{
+			newHand.style.background = "black"
+			newHand.style.color = "white"
+		}
 	splitHandScore()
 
 	playerPoints2.innerHTML = players[1].score2
