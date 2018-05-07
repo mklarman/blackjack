@@ -34,9 +34,10 @@ var scoreLabel = document.getElementById("scoreLabel")
 var unitLabel = document.getElementById("unitLabel")
 var streakLabel = document.getElementById("streakLabel")
 var message = document.getElementById("message")
+var aceOnCold = true
 
 
-
+start.style.display = "none"
 playerPoints2.style.display = "none"
 secondHand.style.display = "none"
 hitPlr2.style.display = "none"
@@ -54,21 +55,33 @@ scoreLabel.innerHTML = "SCORE"
 unitLabel.innerHTML = "+/-"
 streakLabel.innerHTML = "WIN STREAK"
 message.innerHTML = "Open seat here!"
-setTimeout(function(){ message.innerHTML = "I said, open seat right here!"; }, 2000);
-setTimeout(function(){ message.innerHTML = "Only one seat open!  Grab it while it's hot!"; }, 4000);
-setTimeout(function(){ message.innerHTML = "Hit start to claim the seat.  Don't be scared."; }, 7000);
+setTimeout(function(){ message.innerHTML = "Seat open right here bud..."; }, 1000);
+setTimeout(function(){ message.innerHTML = "You want it?"; }, 2500);
+setTimeout(function(){ var yesNo = prompt("Yes or No", "I really hope you say yes.");
+console.log(yesNo)
+	if(yesNo.toLowerCase() == "yes"){
+		start.style.display = "block"
+		message.innerHTML = "Good to see you got some balls.  Hit start and we'll go over the rules."
+	}else{
+		setTimeout(function(){ message.innerHTML = "You call yourself a man??"; }, 1200);
+		setTimeout(function(){ message.innerHTML = "This joint is for gamblers only!  Scram."; }, 2900);
+
+	} 
+}, 3500);
 
 
 function startGame(){
 	dealCards.style.display = "none"
-	message.innerHTML = "Welcome to my blackjack game..."
-	setTimeout(function(){ message.innerHTML = "...here are the rules:"; }, 2000);
-	setTimeout(function(){ message.innerHTML = "Standard blackjack rules apply but..."; }, 4000);
-	setTimeout(function(){ message.innerHTML = "There is a bonus round that you enter if you win three hands in a row."; }, 8000);
-	setTimeout(function(){ message.innerHTML = "In the bonus round you are dealt 19 or better until the dealer beats you."; }, 12000);
-	setTimeout(function(){ message.innerHTML = "It's a race to twenty units.  If you win twenty, then you win.  If you lose twenty units, I win."; }, 17000);
-	setTimeout(function(){ message.innerHTML = "A lot of people a whole lot braver than you walked away without clicking that deal button."; }, 21000);
-	setTimeout(function(){ dealCards.style.display = "block"; }, 22000);
+	message.innerHTML = "Welcome to Big Al's blackjack..."
+	setTimeout(function(){ message.innerHTML = "Here's how we play in my joint..."; }, 2000);
+	setTimeout(function(){ message.innerHTML = "You do whatever the fuck you want."; }, 3500);
+	setTimeout(function(){ message.innerHTML = "Split any two cards..."; }, 5000);
+	setTimeout(function(){ message.innerHTML = "Double down after you've already hit..."; }, 6500);
+	setTimeout(function(){ message.innerHTML = "I'll book anything and everything."; }, 8000);
+	setTimeout(function(){ message.innerHTML = 'Win three hands in a row, you enter the "Luckbox" bonus round where you get dealt 19 or better every hand until you lose.' ; }, 9300);
+	setTimeout(function(){ message.innerHTML = "It's a race to twenty.  Win twenty units and you win.  Lose twenty and I win."; }, 13500);
+	setTimeout(function(){ dealCards.style.display = "block"; message.innerHTML = "Click deal and let's get to it." }, 16500);
+	
 	createPlayers(1)
 	getDeck()
 	getDeck()
@@ -219,7 +232,11 @@ function deal(){
 		message.innerHTML = " "
 		blinking()
 		hotStreak()
+	}else if(winCounter < -2){
+		coldStreak()
+		message.innerHTML = "How you like the game?  HaHaHaHaHa!!"
 	}else{
+
 
 	card1 = deck.pop()
 	card2 = deck.pop()
@@ -325,6 +342,73 @@ function hotStreak(){
 	checkForSplit()
 	blackjack()
 	deckCount.innerHTML = deck.length + " cards left"
+}
+
+function aceCheck(){
+	if(card3.Value == "A" || card4.Value == "A"){
+		aceOnCold = true
+	}else{
+		aceOnCold = false
+	}
+}
+
+function coldStreak(){
+	var cardScore1;
+	var cardScore2;
+	while(players[0].score < 19){
+		card1 = deck.pop()
+		card2 = deck.pop()
+		countDeck(card1)
+		countDeck(card2)
+		if(card1.Value == "A" && card2.Value == "A"){
+			cardScore1 = card1.Weight[1]
+			cardScore2 = card2.Weight[0]
+			players[0].score = cardScore1 + cardScore2
+			dealerPoints.innerHTML = players[0].score
+		}else if(card1.Value == "A"){
+			cardScore1 = card1.Weight[1]
+			cardScore2 = card2.Weight
+			players[0].score = cardScore1 + cardScore2
+			dealerPoints.innerHTML = players[0].score
+		}else if(card2.Value == "A"){
+			cardScore1 = card1.Weight
+			cardScore2 = card2.Weight[1]
+			players[0].score = cardScore1 + cardScore2
+			dealerPoints.innerHTML = players[0].score
+		}else{
+			cardScore1 = card1.Weight
+			cardScore2 = card2.Weight
+			players[0].score = cardScore1 + cardScore2
+			dealerPoints.innerHTML = players[0].score
+		}
+
+		players[0].hand.push(card1)	
+		players[0].hand.push(card2)	
+    }
+
+	var card1Points = 0
+	var card2Points = 0
+	var card3 = deck.pop()
+	var card4 = deck.pop()
+
+	while(card3.Value == "A" || card4.Value == "A"){
+		while(players[1].score < 12 && players[1].score > 16){
+			card3 = deck.pop()
+			card4 = deck.pop()
+			players[1].score = card3.Weight + card4.Weight
+			countDeck(card3)
+			countDeck(card4)
+		}
+	}
+	players[1].hand.push(card3)
+	players[1].hand.push(card4)
+	playerPoints.innerHTML = players[1].score	
+	renderPlayer()
+	renderDealer()
+	blackjack()
+	deckCount.innerHTML = deck.length + " cards left"
+
+
 }
 
 function checkScore(){
@@ -750,7 +834,7 @@ function checkForBust(){
 			plrStay.style.display = "none"
 			dblDown.style.display = "none"
 			playerWin--
-			winCounter = 0
+			winCounter--
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			message.innerHTML = "Looks like you broke like the spineless coward you are on hand 1, pal." + " You have " + players[1].score2 + " " + "on hand 2. What are you gonna do?"
@@ -768,7 +852,7 @@ function checkForBust(){
 			splitP.style.display = "none"
 			dblDown2.style.display = "none"
 			playerWin--
-			winCounter = 0
+			winCounter--
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			message.innerHTML = "If this game was called " + players[1].score + " and not 21, you'd be a winner."
@@ -785,7 +869,7 @@ function checkForBust2(){
 		plrStay2.style.display = "none"
 		dblDown2.style.display = "none"
 		playerWin--
-		winCounter = 0
+		winCounter--
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
 		message.innerHTML = "Looks like " + players[1].score2 + " is more than 21 now isn't it?"
@@ -832,7 +916,7 @@ function checkForWinner(){
 	if(players[0].score < 22 && players[1].score < 22){
 		if(players[0].score > players[1].score){
 			playerWin--
-			winCounter = 0
+			winCounter--
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
@@ -865,7 +949,7 @@ function checkForWinnerSplit(){
 	if(players[0].score < 22 && players[1].score2 < 22){
 		if(players[0].score > players[1].score2){
 			playerWin--
-			winCounter = 0
+			winCounter--
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
@@ -899,45 +983,6 @@ function checkForPush2(){
 
 
 }
-
-
-function splitBustCheck(){
-	// if(players[1].score > 21){
-	// 	console.log("You busted on hand 1")
-	// 	hitPlr.style.display = "none"
-	// 	plrStay.style.display = "none"
-	// 	dblDown.style.display = "none"
-	// 	dblDown2.style.display = "block"
-	// 	plrStay2.style.display = "block"
-	// 	hitPlr2.style.display = "block"
-	// 	splitP.style.display = "none"
-	// 	dealCards.style.display = "none"
-
-	// }
-	if(players[1].score2 > 21){
-		console.log("you busted on hand 2")
-		
-		if(players[1].score < 22){
-			hitDealer()
-		}else{
-			message.innerHTML = "Dealer wins vs both hands"
-
-		}
-		players[1].hand2.length = 0
-	
-		dealCards.style.display = "block"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		dblDown.style.display = "none"
-		dblDown2.style.display = "none"
-		secondHand.style.display = "none"
-		plrStay2.style.display = "none"
-		hitPlr2.style.display = "none"
-		splitP.style.display = "none"
-	}
-
-}
-
 
 function checkForSplit(){
 	if(players[1].hand[0].Value == players[1].hand[1].Value){
@@ -1151,6 +1196,43 @@ function blingMess(){
 
 // }
 
+// function splitBustCheck(){
+// 	// if(players[1].score > 21){
+// 	// 	console.log("You busted on hand 1")
+// 	// 	hitPlr.style.display = "none"
+// 	// 	plrStay.style.display = "none"
+// 	// 	dblDown.style.display = "none"
+// 	// 	dblDown2.style.display = "block"
+// 	// 	plrStay2.style.display = "block"
+// 	// 	hitPlr2.style.display = "block"
+// 	// 	splitP.style.display = "none"
+// 	// 	dealCards.style.display = "none"
+
+// 	// }
+// 	if(players[1].score2 > 21){
+// 		console.log("you busted on hand 2")
+		
+// 		if(players[1].score < 22){
+// 			hitDealer()
+// 		}else{
+// 			message.innerHTML = "Dealer wins vs both hands"
+
+// 		}
+// 		players[1].hand2.length = 0
+	
+// 		dealCards.style.display = "block"
+// 		hitPlr.style.display = "none"
+// 		plrStay.style.display = "none"
+// 		dblDown.style.display = "none"
+// 		dblDown2.style.display = "none"
+// 		secondHand.style.display = "none"
+// 		plrStay2.style.display = "none"
+// 		hitPlr2.style.display = "none"
+// 		splitP.style.display = "none"
+// 	}
+
+// }
+
 
 
 // function checkForWinnerSplit2(){
@@ -1186,9 +1268,9 @@ function blingMess(){
 
 // }
 
-// function cardCheck(value){
-//       return (array.indexOf(value) === -1) ? false : true   
-//     }
+	// function (card){
+ //      	return (players[1].hand.indexOf() === -1) ? false : true   
+ //      }
 
 // function end(){
 // 	for(i = 0; i<players.length; i++){
