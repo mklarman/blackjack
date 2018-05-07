@@ -8,6 +8,10 @@ var playerWin = 0
 var dealerWin = 0
 var winCounter = 0
 var handNum = 0
+var card1;
+var card2;
+var card3;
+var card4;
 
 
 var start = document.getElementById("startGame")
@@ -345,69 +349,85 @@ function hotStreak(){
 }
 
 function aceCheck(){
-	if(card3.Value == "A" || card4.Value == "A"){
-		aceOnCold = true
-	}else{
-		aceOnCold = false
-	}
+	do{
+		card3 = deck.pop()
+		countDeck(card3)
+	}while(card3.Value == "A")
+
+	do{
+		card4 = deck.pop()
+		countDeck(card4) 
+	}while(card4.Value == "A")
+
+	players[1].score = card3.Weight + card4.Weight
+
 }
 
-function coldStreak(){
-	var cardScore1;
-	var cardScore2;
+function coldCards(){
+	do{
+		aceCheck()
+	}while(players[1].score > 16)
+
+	players[1].hand.push(card3)
+	players[1].hand.push(card4)
+	players[1].score = card3.Weight + card4.Weight
+	playerPoints.innerHTML = players[1].score
+
+} 
+
+function dealerHotCards(){
+	
 	while(players[0].score < 19){
 		card1 = deck.pop()
 		card2 = deck.pop()
-		countDeck(card1)
-		countDeck(card2)
+		console.log([card1, card2])
 		if(card1.Value == "A" && card2.Value == "A"){
-			cardScore1 = card1.Weight[1]
-			cardScore2 = card2.Weight[0]
-			players[0].score = cardScore1 + cardScore2
-			dealerPoints.innerHTML = players[0].score
+			players[0].score = card1.Weight[1] + card2.Weight[0]
 		}else if(card1.Value == "A"){
-			cardScore1 = card1.Weight[1]
-			cardScore2 = card2.Weight
-			players[0].score = cardScore1 + cardScore2
-			dealerPoints.innerHTML = players[0].score
+			players[0].score = card1.Weight[1] + card2.Weight
+		
 		}else if(card2.Value == "A"){
-			cardScore1 = card1.Weight
-			cardScore2 = card2.Weight[1]
-			players[0].score = cardScore1 + cardScore2
-			dealerPoints.innerHTML = players[0].score
+			players[0].score = card1.Weight + card2.Weight[1]
+		
 		}else{
-			cardScore1 = card1.Weight
-			cardScore2 = card2.Weight
-			players[0].score = cardScore1 + cardScore2
-			dealerPoints.innerHTML = players[0].score
-		}
-
-		players[0].hand.push(card1)	
-		players[0].hand.push(card2)	
-    }
-
-	var card1Points = 0
-	var card2Points = 0
-	var card3 = deck.pop()
-	var card4 = deck.pop()
-
-	while(card3.Value == "A" || card4.Value == "A"){
-		while(players[1].score < 12 && players[1].score > 16){
-			card3 = deck.pop()
-			card4 = deck.pop()
-			players[1].score = card3.Weight + card4.Weight
-			countDeck(card3)
-			countDeck(card4)
+			players[0].score = card1.Weight + card2.Weight
 		}
 	}
-	players[1].hand.push(card3)
-	players[1].hand.push(card4)
-	playerPoints.innerHTML = players[1].score	
+	players[0].hand.push(card1)
+	players[0].hand.push(card2)
+	return players[0].hand
+
+}
+
+
+
+
+	// do{
+	// card1 = deck.pop()
+	// countDeck(card1)
+	// }while(card1.Value !== "A" || "K" || "Q" || "J" || "10" || "9")
+	// console.log(card1)
+
+	// do{
+	// card2 = deck.pop()
+	// countDeck(card2)
+	// }while(card2.Value !== "A" || "K" || "Q" || "J" || "10" || "9")
+	// console.log(card2)
+
+	// players[0].hand.push(card1)
+	// players[0].hand.push(card2)
+	// updateDlr()
+	
+
+
+
+function coldStreak(){
+	dealerHotCards()
+    coldCards()
 	renderPlayer()
 	renderDealer()
 	blackjack()
 	deckCount.innerHTML = deck.length + " cards left"
-
 
 }
 
@@ -1102,52 +1122,43 @@ function countDeck(card){
 	if(card.Value == "2"){
 		counter++
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "3"){
 		counter++
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "4"){
 		counter++
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "5"){
 		counter++
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "6"){
 		counter++
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "10"){
 		counter--
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "J"){
 		counter--
 		theCount.innerHTML = counter
-		console.log(card.value)
-	
+		
 	}else if(card.Value == "Q"){
 		counter--
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "K"){
 		counter--
 		theCount.innerHTML = counter
-		console.log(card.value)
 	
 	}else if(card.Value == "A"){
 		counter--
 		theCount.innerHTML = counter
-		console.log(card.value)
+
 	}else{
 		theCount.innerHTML = counter
 	}
