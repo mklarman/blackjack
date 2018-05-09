@@ -590,7 +590,7 @@ function hitPlayer(){
 	players[1].hand.push(card)
 	playerCards.appendChild(cardHolder)
 	updatePly()
-	checkForBust()
+	playerBustCheck()
 }
 
 
@@ -656,14 +656,7 @@ function splitDoubleCard(){
 function hitDealer(){
 	
 
-	if(players[0].hand[1].Suit == "hearts" || players[0].hand[1].Suit =="diamonds"){
-			renderedCardsD2.style.background = "red"
-			renderedCardsD2.style.color = "white"
-	}else{
-			renderedCardsD2.style.background = "black"
-			renderedCardsD2.style.color = "white"
-	}
-	
+	showDealerCards()
 	dealerPoints.innerHTML = players[0].score
 	
 	while(players[0].score < 17 && players[0].score > 0){
@@ -687,21 +680,39 @@ function hitDealer(){
 			cardHolder.style.background = "black"
 			cardHolder.style.color = "white"
 		}
-		console.log(card)
 		players[0].hand.push(card)
 		dealerCards.appendChild(cardHolder)
 		updateDlr()
 		message.innerHTML = "Dealer has " + players[0].score + "."
 	}
-	checkForBust()
-	checkForPush()
+	dealerBustCheck()
+	dealerBustV2()
 	checkForWinner()
-	
-	if(players[1].hand2.length > 0){
-		checkForBust2()
-		checkForPush2()
-		checkForWinnerSplit()
+	checkForWinnerSplit()
+}
+
+
+function dealerBustV2(){
+
+	if(players[0].score > 21 ){
+		if(players[1].score2 > 0 && players[1].score2 < 22){
+
+			playerWin++
+		
+		if(winCounter > 0){
+			winCounter++
+		}else{
+			winCounter = 0
+		}
+		
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "God Dam it!"
+
+
+		}
 	}
+
 }
 	
 
@@ -768,7 +779,20 @@ function blackjack(){
 
 	if(players[1].score == 21 && players[0].score == 21){
 		checkForPush()
+		
 		dealerPoints.innerHTML = players[0].score
+		start.style.display = "none"
+		playerPoints2.style.display = "none"
+		secondHand.style.display = "none"
+		hitPlr2.style.display = "none"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown.style.display = "none"
+		dealCards.style.display = "block"
+		splitP.style.display = "none"
+		dblDown2.style.display = "none"
+		
 		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
 			renderedCardsD1.style.background = "red"
 			renderedCardsD1.style.color = "white"
@@ -785,6 +809,19 @@ function blackjack(){
 		}
 
 	}else if(players[1].score == 21){
+		dealerPoints.innerHTML = players[0].score
+		start.style.display = "none"
+		playerPoints2.style.display = "none"
+		secondHand.style.display = "none"
+		hitPlr2.style.display = "none"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown.style.display = "none"
+		dealCards.style.display = "block"
+		splitP.style.display = "none"
+		dblDown2.style.display = "none"
+		
 		if(winCounter > 0){
 			winCounter++
 		}else{
@@ -792,14 +829,31 @@ function blackjack(){
 		}
 		message.innerHTML = "Shit.  That won't keep up.  I hope."
 		dealerPoints.innerHTML = players[0].score
+	
 	}else if(players[0].score == 21){
+
+		dealerPoints.innerHTML = players[0].score
+		start.style.display = "none"
+		playerPoints2.style.display = "none"
+		secondHand.style.display = "none"
+		hitPlr2.style.display = "none"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown.style.display = "none"
+		dealCards.style.display = "block"
+		splitP.style.display = "none"
+		dblDown2.style.display = "none"
+		
 		if(winCounter > 0){
 			winCounter = 0
 		}else{
 			winCounter--
 		}
+		
 		dealerPoints.innerHTML = players[0].score
 		message.innerHTML = "Yeah boy!  How's my blackjack taste?"
+		
 		if(players[0].hand[0].Suit == "hearts" || "diamonds"){
 			renderedCardsD1.style.background = "red"
 			renderedCardsD1.style.color = "white"
@@ -821,8 +875,85 @@ function blackjack(){
 
 }
 
+function showDealerCards(){
+
+	if(players[0].hand[1].Suit == "hearts" || players[0].hand[1].Suit =="diamonds"){
+			renderedCardsD2.style.background = "red"
+			renderedCardsD2.style.color = "white"
+	}else{
+			renderedCardsD2.style.background = "black"
+			renderedCardsD2.style.color = "white"
+	}
+	
+	dealerPoints.innerHTML = players[0].score
+
+}
+
 function checkForBust(){
-	if(players[0].score > 21){
+	
+	
+	if(players[1].score > 21 && players[1].score2 == 0){
+		showDealerCards()
+		playerWin--
+			
+		if(winCounter > 0){
+			
+			winCounter = 0
+			
+		}else{
+			
+			winCounter--
+			
+		}
+
+		dealCards.style.display = "block"
+		hitPlr2.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown2.style.display = "none"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		dblDown.style.display = "none"		
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "Poor baby.  You broke. HAHAHAH"
+
+	if(players[1].score > 21 )
+	}else{
+		playerWin--
+			
+		if(winCounter > 0){
+			
+			winCounter = 0
+			
+		}else{
+			
+			winCounter--
+			
+		}
+
+		dealCards.style.display = "none"
+		hitPlr2.style.display = "block"
+		plrStay2.style.display = "block"
+		dblDown2.style.display = "block"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		dblDown.style.display = "none"
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "Looks like you broke like the spineless coward you are on hand 1, pal." + " You have " + players[1].score2 + " " + "on hand 2. What are you gonna do?"
+
+	}
+}
+		
+
+
+
+
+		
+
+function checkForBust2(){
+	if(players[0].score > 21 && players[1].score2 < 22){
+
 		dealCards.style.display = "block"
 		hitPlr.style.display = "none"
 		plrStay.style.display = "none"
@@ -833,16 +964,101 @@ function checkForBust(){
 		dblDown2.style.display = "none"
 		splitP.style.display = "none"
 		playerWin++
+		
 		if(winCounter > 0){
 			winCounter++
 		}else{
 			winCounter = 0
 		}
+		
 		winStreak.innerHTML = winCounter
 		playerWins.innerHTML = playerWin
-		message.innerHTML = "I broke, fuck."
-	}if(players[1].score > 21){
-		if(players[1].hand2.length > 0){
+		message.innerHTML = "God Dam it!"
+
+	}else if(players[0].score < 22 && players[1].score2 > 21){
+
+		playerWin--
+			
+		if(winCounter > 0){
+			
+			winCounter = 0
+			
+		}else{
+			
+			winCounter--
+			
+		}
+
+		dealCards.style.display = "block"
+		hitPlr2.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown2.style.display = "none"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		dblDown.style.display = "none"		
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "You didn't pull the miracle card outta your ass this time, huh?"
+
+
+	}else{
+
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+	}
+		
+	
+	if (players[1].score2 > 21 && players[1].score < 22){
+			hitDealer()
+	}
+}
+
+
+function dealerBustCheck(){
+
+	if(players[0].score > 21){
+
+		dealCards.style.display = "block"
+		hitPlr.style.display = "none"
+		plrStay.style.display = "none"
+		dblDown.style.display = "none"
+		splitP.style.display = "none"
+		hitPlr2.style.display = "none"
+		plrStay2.style.display = "none"
+		dblDown2.style.display = "none"
+		splitP.style.display = "none"
+		playerWin++
+		
+		if(winCounter > 0){
+			winCounter++
+		}else{
+			winCounter = 0
+		}
+		
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "God Dam it!"
+
+	}
+}
+
+function playerBustCheck(){
+
+	if(players[1].score > 21){
+		playerWin--
+			
+		if(winCounter > 0){
+			
+			winCounter = 0
+			
+		}else{
+			
+			winCounter--
+			
+		}
+
+		if(players[1].score2 > 0 && players[1].score2 < 22){
+
 			dealCards.style.display = "none"
 			hitPlr2.style.display = "block"
 			plrStay2.style.display = "block"
@@ -850,107 +1066,33 @@ function checkForBust(){
 			hitPlr.style.display = "none"
 			plrStay.style.display = "none"
 			dblDown.style.display = "none"
-			playerWin--
-			
-			if(winCounter > 0){
-			
-				winCounter = 0
-			
-			}else{
-			
-				winCounter--
-			
-			}
-			
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			message.innerHTML = "Looks like you broke like the spineless coward you are on hand 1, pal." + " You have " + players[1].score2 + " " + "on hand 2. What are you gonna do?"
 
-		}else{
 
-			playerPoints2.style.display = "none"
-			secondHand.style.display = "none"
-			hitPlr2.style.display = "none"
-			hitPlr.style.display = "none"
-			plrStay.style.display = "none"
-			plrStay2.style.display = "none"
-			dblDown.style.display = "none"
-			dealCards.style.display = "block"
-			splitP.style.display = "none"
-			dblDown2.style.display = "none"
-			playerWin--
-			
-			if(winCounter > 0){
-			
-				winCounter = 0
-			
-			}else{
-			
-				winCounter--
-			
-			}
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
-			message.innerHTML = "If this game was called " + players[1].score + " and not 21, you'd be a winner."
 
-		}	
+		}
 	}
 }
 
-function checkForBust2(){
+function playerHand2Check(){
+
 	if(players[1].score2 > 21){
-		players[1].hand2.length = 0
-		dealCards.style.display = "block"
-		hitPlr2.style.display = "none"
-		plrStay2.style.display = "none"
-		dblDown2.style.display = "none"
 		playerWin--
-		
+			
 		if(winCounter > 0){
 			
-				winCounter = 0
+			winCounter = 0
 			
 		}else{
 			
-				winCounter--
+			winCounter--
 			
 		}
-		
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
-		message.innerHTML = "Looks like " + players[1].score2 + " is more than 21 now isn't it?"
-		
-		if (players[1].score < 21){
-			hitDealer()
-		}else{
-		
-			while (dealerCards.firstChild) {
-    		dealerCards.removeChild(dealerCards.firstChild);
-			}
-		
-			for(i=0; i<players[0].hand.length; i++){
-				var cardHolder = document.createElement("div") 
-				cardHolder.setAttribute("class", "renCards")
-				cardHolder.style.height = '149px'
-				cardHolder.style.width = '149px'
-				cardHolder.style.border = '1px solid white'
-				cardHolder.style.display = 'inline-block'
-				cardHolder.style.fontSize = '23px'
-				cardHolder.style.textAlign = 'center'
-				cardHolder.innerHTML = players[0].hand[i].Value + " " + players[0].hand[i].Suit
-				dealerCards.appendChild(cardHolder)
 
-				if(players[0].hand[i].Suit == "hearts" || players[0].hand[i].Suit == "diamonds"){
-					cardHolder.style.background = "red"
-					cardHolder.style.color = "white"
-				}else{
-					cardHolder.style.background = "black"
-					cardHolder.style.color = "white"
-				}
-			}
-		}
-	
 	}
+
 }
 
 
@@ -1011,9 +1153,11 @@ function checkForWinnerSplit(){
 	dblDown.style.display = "none"
 	dblDown2.style.display = "none"
 
-	if(players[0].score < 22 && players[1].score2 < 22){
+	if(players[1].score2 > 0 && players[1].score2 < 22){
+
 		if(players[0].score > players[1].score2){
 			playerWin--
+			console.log(playerWin)
 			
 			if(winCounter > 0){
 			
@@ -1029,7 +1173,9 @@ function checkForWinnerSplit(){
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
 			message.innerHTML = "Looks like Big Al is gonna take this one."
-		}if(players[0].score < players[1].score2){
+
+		}else if(players[0].score < players[1].score2){
+
 			playerWin++
 			
 			if(winCounter > 0){
@@ -1041,18 +1187,18 @@ function checkForWinnerSplit(){
 				winCounter = 0
 			
 			}
-			
 			winStreak.innerHTML = winCounter
 			playerWins.innerHTML = playerWin
 			playerWins.innerHTML = playerWin
-			message.innerHTML = "Take this one and be happy."
-			
-		}
-		
-	}
-	players[1].hand2.length = 0
 
+		}else{
+
+			checkForPush2()
+		}
+	}
 }
+	
+
 
 function checkForPush(){
 	if(players[0].score && players[1].score != 0 && players[0].score == players[1].score ){
