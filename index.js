@@ -332,6 +332,7 @@ function hotStreak(){
 	players[0].hand.push(card1)
 	players[0].hand.push(card2)
 	updateDlr()
+	dealerPoints.innerHTML = players[0].hand[0].Weight
 	var card1Points = 0
 	var card2Points = 0
 
@@ -540,9 +541,6 @@ function updatePly2(){
 	players[1].score2 = pointsP2
 	playerPoints2.innerHTML = players[1].score2
 
-	if(players[1].score2 > 21){
-		playerHand2Check()
-	}
 }
 
 function updateDlr(){
@@ -709,24 +707,18 @@ function hitDealer(){
 		
 		dealerBustCheck()
 		dealerBustV2()
-	}else if(players[0].score < 22 && players[1].score < 22){
-		
-		if(players[1].score2 < 22 && players[1].score2 > 0){
-			
-			checkForWinner()
-			checkForWinnerSplit()
-		
-		}else{
-
-			checkForWinner()
-		}
-		
+	
 	}else{
-		
-		message.innerHTML = " ERROR "
+
+		checkForWinner()
+
+		if(players[1].score2 < 22){
+
+			checkForWinnerSplit()
+		}
+
 	}
-	
-	
+		
 }
 
 
@@ -832,20 +824,28 @@ function blackjack(){
 		dblDown2.style.display = "none"
 
 	}else if(players[1].score == 21){
+
+		console.log(playerWin)
 		
 		playerWin++
+		playerWins.innerHTML = playerWin
+
+		console.log(playerWin)
 		
 		if(winCounter > 0){
 			
 			winCounter++
+			winStreak.innerHTML = winCounter
 		
 		}else if(winCounter == 0){
 			
 			winCounter++
+			winStreak.innerHTML = winCounter
 		
 		}else{
 
 			winCounter = 0
+			winStreak.innerHTML = winCounter
 		}
 
 		start.style.display = "none"
@@ -867,18 +867,22 @@ function blackjack(){
 		showDealerCards()
 
 		playerWin--
+		playerWins.innerHTML = playerWin
 		
 		if(winCounter > 0){
 			
 			winCounter = 0
+			winStreak.innerHTML = winCounter
 		
 		}else if(winCounter == 0){
 			
 			winCounter--
+			winStreak.innerHTML = winCounter
 		
 		}else{
 
 			winCounter--
+			winStreak.innerHTML = winCounter
 		}
 
 		dealerPoints.innerHTML = players[0].score
@@ -976,6 +980,9 @@ function playerBustCheck(){
 			winCounter--
 		}
 
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+
 		if(players[1].score2 > 0 && players[1].score2 < 22){
 
 			dealCards.style.display = "none"
@@ -1029,13 +1036,34 @@ function playerHand2Check(){
 			winCounter--
 		}
 
+		winStreak.innerHTML = winCounter
+		playerWins.innerHTML = playerWin
+		message.innerHTML = "The game is 21, not " + players[1].score2 + "."
 
-		message.innerHTML = "The game is 21, not " + players[1].score + "."
+		if(players[1].score < 22){
+			hitDealer()
+			dealCards.style.display = "block"
+			hitPlr2.style.display = "none"
+			plrStay2.style.display = "none"
+			dblDown2.style.display = "none"
+			hitPlr.style.display = "none"
+			plrStay.style.display = "none"
+			dblDown.style.display = "none"
+		
+		}else{
 
-	}
+			dealCards.style.display = "block"
+			hitPlr2.style.display = "none"
+			plrStay2.style.display = "none"
+			dblDown2.style.display = "none"
+			hitPlr.style.display = "none"
+			plrStay.style.display = "none"
+			dblDown.style.display = "none"
+		}
 
-	if(players[1].score2 > 21 && players[1].score < 22){
-		hitDealer()
+	}else{
+
+		playerPoints2.innerHTML = players[1].score2
 	}
 
 }
