@@ -38,6 +38,7 @@ var scoreLabel = document.getElementById("scoreLabel")
 var unitLabel = document.getElementById("unitLabel")
 var streakLabel = document.getElementById("streakLabel")
 var message = document.getElementById("message")
+var blink_message = document.createElement("div")
 var aceOnCold = true
 var doubleBet = false
 var doubleBet2 = false
@@ -209,18 +210,18 @@ function gameReset(){
 	winStreak.innerHTML = 0
 }
 
-function gameResetWithDeal(){
+function gameResetNoDeal(){
 
 	start.style.display = "none"
 	playerPoints2.style.display = "none"
 	secondHand.style.display = "none"
 	hitPlr2.style.display = "none"
-	hitPlr.style.display = "none"
-	plrStay.style.display = "none"
+	hitPlr.style.display = "block"
+	plrStay.style.display = "block"
 	plrStay2.style.display = "none"
-	dblDown.style.display = "none"
-	dealCards.style.display = "block"
-	splitP.style.display = "none"
+	dblDown.style.display = "block"
+	dealCards.style.display = "none"
+	splitP.style.display = "block"
 	dblDown2.style.display = "none"
 	doubleBet = false
 	doubleBet2 = false
@@ -274,17 +275,7 @@ function deal(){
 	players[0].score = 0
 	players[1].score = 0
 	players[1].hand2.length = 0
-	playerPoints2.style.display = "none"
-	hitCounter = 0
-	dealCards.style.display = "none"
-	hitPlr.style.display = "block"
-	plrStay.style.display = "block"
-	dblDown.style.display = "block"
-	dblDown2.style.display = "none"
-	secondHand.style.display = "none"
-	plrStay2.style.display = "none"
-	hitPlr2.style.display = "none"
-	splitP.style.display = "none"
+	gameResetNoDeal()
 
 	if(deck.length < 11){
 		shuffleCheck()
@@ -308,15 +299,20 @@ function deal(){
 	}
 
 	if(winCounter > 2){
-		message.innerHTML = " "
+		
+		document.body.style.backgroundColor = "red";
 		blinking()
 		hotStreak()
+	
 	}else if(winCounter < -2){
+		
+		document.body.style.backgroundColor = "lightblue";
+		blinkingCold()
 		coldStreak()
-		message.innerHTML = "How you like the game now?  HaHaHaHaHa!!"
+	
 	}else{
 
-
+		document.body.style.backgroundColor = "green";
 		card1 = deck.pop()
 		card2 = deck.pop()
 		card3 = deck.pop()
@@ -643,10 +639,7 @@ function add(a, b) {
 }
 
 function hitPlayer(){
-	if(players[1].hand.length == 1){
-		dblDown.style.display = "none"
-	}
-	splitP.style.dislay = "none"
+	
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
@@ -707,7 +700,7 @@ function splitDoubleCard(){
 	cardHolder.setAttribute("class", "renCards")
 	cardHolder.style.height = '149px'
 	cardHolder.style.width = '149px'
-	cardHolder.style.border = '1px solid red'
+	cardHolder.style.border = '1px solid white'
 	cardHolder.style.display = 'inline-block'
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
@@ -716,6 +709,15 @@ function splitDoubleCard(){
 	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
 	players[1].hand2.push(card)
+
+	if(card.Suit == "hearts" || card.Suit =="diamonds"){
+			cardHolder.style.background = "red"
+			cardHolder.style.color = "white"
+	}else{
+			cardHolder.style.background = "black"
+			cardHolder.style.color = "white"
+	}
+	
 	secondHand.appendChild(cardHolder)
 	updatePly2()
 
@@ -790,17 +792,8 @@ function dealerBustV2(){
 	if(players[0].score > 21 ){
 		if(players[1].score2 > 0 && players[1].score2 < 22){
 
-			playerWin++
-		
-		if(winCounter > 0){
-			winCounter++
-		}else{
-			winCounter = 0
-		}
-		
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
-		message.innerHTML = "God Dam it!"
+			playerVic2()
+			message.innerHTML = "God Dam it!"
 
 
 		}
@@ -1004,15 +997,16 @@ function doubleDown(){
 function blackjack(){
 
 	if(players[1].score == 21 && players[0].score == 21){
+		
 		checkForPush()
 		showDealerCards()
-		gameResetWithDeal()
+		getReadyForDeal()
 
 	}else if(players[1].score == 21){
 		
 		playerVic()
 
-		gameResetWithDeal()
+		getReadyForDeal()
 		
 		message.innerHTML = "Shit.  That won't keep up.  I hope."
 	
@@ -1022,7 +1016,7 @@ function blackjack(){
 
 		playerLoses()
 
-		gameResetWithDeal()
+		getReadyForDeal()
 		
 		message.innerHTML = "Yeah boy!  How's my blackjack taste?"
 	
@@ -1060,7 +1054,7 @@ function dealerBustCheck(){
 		
 		playerVic()
 		message.innerHTML = "God Dam it!"
-		gameResetWithDeal()
+		getReadyForDeal()
 
 	}
 }
@@ -1079,8 +1073,8 @@ function playerBustCheck(){
 		}else{
 
 			showDealerCards()
-			gameResetWithDeal()
 			message.innerHTML = "You didn't pull the miracle card outta your ass this time, pal"
+			getReadyForDeal()
 
 
 		}
@@ -1101,10 +1095,11 @@ function playerHand2Check(){
 		}else{
 
 			showDealerCards()
-			gameResetWithDeal()
+			getReadyForDeal()
 		}
 
 	}
+
 
 }
 
@@ -1116,21 +1111,19 @@ function checkForWinner(){
 			
 			playerLoses()
 			message.innerHTML = "I'll take this one, thanks."
-			gameResetWithDeal()
 		
 		}else if(players[0].score < players[1].score){
 			
 			playerVic()
 			message.innerHTML = "I'll give you this one cause I don't want you to quit me."
-			gameResetWithDeal()
 		
 		}else{
 			
 			checkForPush()
-			gameResetWithDeal()
 		}
 
 	}
+	getReadyForDeal()
 
 	
 }
@@ -1154,7 +1147,21 @@ function checkForWinnerSplit(){
 			checkForPush2()
 		}
 	}
-	gameResetWithDeal()
+	getReadyForDeal()
+	
+}
+
+function getReadyForDeal(){
+
+	start.style.display = "none"
+	hitPlr2.style.display = "none"
+	hitPlr.style.display = "none"
+	plrStay.style.display = "none"
+	plrStay2.style.display = "none"
+	dblDown.style.display = "none"
+	dealCards.style.display = "block"
+	splitP.style.display = "none"
+	dblDown2.style.display = "none"
 }
 	
 
@@ -1320,25 +1327,42 @@ function countDeck(card){
 }
 
 
-var blink_message = document.createElement("div")
 
 function blinking(){
-	console.log("In function blinking")
+	
 	blink_message.style.height = "100px"
 	blink_message.style.width = "300px"
 	blink_message.style.fontSize = "30px"
 	blink_message.style.textAlign = "center"
 	blink_message.style.color = "red"
 	blink_message.style.margin = "auto"
-	blink_message.innerHTML = "You're On Fire!!!"
 	message.innerHTML = " "
+	blink_message.innerHTML = "You're On Fire!!!"
 
 
 	message.appendChild(blink_message)
-	blingMess()
+	blinkMess()
 }
 
-function blingMess(){
+function blinkingCold(){
+
+	blink_message.style.height = "100px"
+	blink_message.style.width = "300px"
+	blink_message.style.fontSize = "30px"
+	blink_message.style.textAlign = "center"
+	blink_message.style.color = "blue"
+	blink_message.style.margin = "auto"
+	message.innerHTML = " "
+	blink_message.innerHTML = "You're ice cold!!!"
+
+
+	message.appendChild(blink_message)
+	blinkMess()
+
+
+}
+
+function blinkMess(){
 	var blink_speed = 500;
 	var t = setInterval(function () {
 	     blink_message.style.visibility = (blink_message.style.visibility == 'hidden' ? '' : 'hidden');
