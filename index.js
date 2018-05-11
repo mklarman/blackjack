@@ -39,6 +39,8 @@ var unitLabel = document.getElementById("unitLabel")
 var streakLabel = document.getElementById("streakLabel")
 var message = document.getElementById("message")
 var aceOnCold = true
+var doubleBet = false
+var doubleBet2 = false
 var renderedCardsD1 = document.createElement("div")
 renderedCardsD1.style.height = '149px'
 renderedCardsD1.style.width = '149px'
@@ -146,6 +148,10 @@ splitP.addEventListener("click", function(){
 	splitCards()
 })
 
+dblDown2.addEventListener("click", function(){
+	splitDoubleCard()
+})
+
 
 function createPlayers(num){
 	for(i=0; i<=num; i++){
@@ -181,6 +187,58 @@ function getDeck(){
 	}
 
 	return deck;
+}
+
+function gameReset(){
+
+	start.style.display = "block"
+	playerPoints2.style.display = "none"
+	secondHand.style.display = "none"
+	hitPlr2.style.display = "none"
+	hitPlr.style.display = "none"
+	plrStay.style.display = "none"
+	plrStay2.style.display = "none"
+	dblDown.style.display = "none"
+	dealCards.style.display = "none"
+	splitP.style.display = "none"
+	dblDown2.style.display = "none"
+	doubleBet = false
+	doubleBet2 = false
+	playerWins.innerHTML = 0
+	theCount.innerHTML = 0
+	winStreak.innerHTML = 0
+}
+
+function gameResetWithDeal(){
+
+	start.style.display = "none"
+	playerPoints2.style.display = "none"
+	secondHand.style.display = "none"
+	hitPlr2.style.display = "none"
+	hitPlr.style.display = "none"
+	plrStay.style.display = "none"
+	plrStay2.style.display = "none"
+	dblDown.style.display = "none"
+	dealCards.style.display = "block"
+	splitP.style.display = "none"
+	dblDown2.style.display = "none"
+	doubleBet = false
+	doubleBet2 = false
+}
+
+function buttonsForSplit(){
+
+	start.style.display = "none"
+	hitPlr2.style.display = "block"
+	hitPlr.style.display = "none"
+	plrStay.style.display = "none"
+	plrStay2.style.display = "block"
+	dblDown.style.display = "none"
+	dealCards.style.display = "none"
+	splitP.style.display = "none"
+	dblDown2.style.display = "block"
+
+
 }
 
 function shuffle(){
@@ -337,7 +395,9 @@ function hotStreak(){
 	var card2Points = 0
 
 	while(players[1].score < 19){
+		shuffleCheck()
 		card3 = deck.pop()
+		shuffleCheck()
 		card4 = deck.pop()
 		countDeck(card3)
 		countDeck(card4)
@@ -375,10 +435,12 @@ function hotStreak(){
 function aceCheck(){
 	do{
 		card3 = deck.pop()
+		shuffleCheck()
 		countDeck(card3)
 	}while(card3.Value == "A")
 
 	do{
+		shuffleCheck()
 		card4 = deck.pop()
 		countDeck(card4) 
 	}while(card4.Value == "A")
@@ -405,6 +467,7 @@ function dealerHotCards(){
 	while(players[0].score < 19){
 		shuffleCheck()
 		card1 = deck.pop()
+		shuffleCheck()
 		card2 = deck.pop()
 		countDeck(card1)
 		countDeck(card2)
@@ -421,11 +484,10 @@ function dealerHotCards(){
 			players[0].score = card1.Weight + card2.Weight
 		}
 	}
+	shuffleCheck()
 	players[0].hand.push(card1)
 	players[0].hand.push(card2)
 	dealerPoints.innerHTML = players[0].hand[0].Weight
-	return players[0].hand
-
 }
 
 function coldStreak(){
@@ -639,6 +701,7 @@ function hitPlayer2(){
 }
 
 function splitDoubleCard(){
+	doubleBet2 = true
 	dblDown2.style.display = "none"
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
@@ -658,7 +721,7 @@ function splitDoubleCard(){
 
 	if(players[1].score2 > 21){
 		
-		checkForBust2()
+		playerHand2Check()
 	
 	}else{
 	
@@ -748,12 +811,13 @@ function dealerBustV2(){
 
 function stay(){
 	splitP.style.display = "none"
+	
 	if(secondHand.style.display == "block"){
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		hitPlr2.style.display = "block"
-		plrStay2.style.display = "block"
+		
+		buttonsForSplit()
+	
 	}else{
+		
 		dealerPoints.innerHTML = players[0].score
 		hitDealer()
 	}
@@ -761,18 +825,144 @@ function stay(){
 }
 
 function stay2(){
-	if(players[0].hand[0].Suit == "hearts" || players[0].hand[0].Suit == "hearts"){
-			renderedCardsD2.style.background = "red"
-			renderedCardsD2.style.color = "white"
-
-	}else{
-			renderedCardsD1.style.background = "black"
-			renderedCardsD1.style.color = "white"
-	}
+	
+	showDealerCards()
 	hitDealer()
 }
 
+function playerLoses(){
+
+	if(doubleBet == true){
+
+		playerWin--
+		playerWin--
+	
+	}else{
+
+		playerWin--
+	}
+
+	playerWins.innerHTML = playerWin
+
+	if(winCounter > 0){
+			
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+		
+	}else if(winCounter == 0){
+			
+		winCounter--
+		winStreak.innerHTML = winCounter
+		
+	}else{
+
+		winCounter--
+		winStreak.innerHTML = winCounter
+	}
+
+}
+
+function playerVic(){
+
+	if(doubleBet == true){
+
+		playerWin++
+		playerWin++
+	
+	}else{
+
+		playerWin++
+	}
+
+	playerWins.innerHTML = playerWin
+
+	if(winCounter > 0){
+			
+		winCounter++
+		winStreak.innerHTML = winCounter
+		
+	}else if(winCounter == 0){
+			
+		winCounter++
+		winStreak.innerHTML = winCounter
+		
+	}else{
+
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+	}
+
+}
+
+function playerLoses2(){
+
+	if(doubleBet2 == true){
+
+		playerWin--
+		playerWin--
+	
+	}else{
+
+		playerWin--
+	}
+
+	playerWins.innerHTML = playerWin
+
+	if(winCounter > 0){
+			
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+		
+	}else if(winCounter == 0){
+			
+		winCounter--
+		winStreak.innerHTML = winCounter
+		
+	}else{
+
+		winCounter--
+		winStreak.innerHTML = winCounter
+	}
+
+
+}
+
+function playerVic2(){
+
+	if(doubleBet2 == true){
+
+		playerWin++
+		playerWin++
+	
+	}else{
+
+		playerWin++
+	}
+
+	playerWins.innerHTML = playerWin
+
+	if(winCounter > 0){
+			
+		winCounter++
+		winStreak.innerHTML = winCounter
+		
+	}else if(winCounter == 0){
+			
+		winCounter++
+		winStreak.innerHTML = winCounter
+		
+	}else{
+
+		winCounter = 0
+		winStreak.innerHTML = winCounter
+	}
+
+}
+
 function doubleDown(){
+	
+	doubleBet = true
+	console.log(doubleBet)
 	dblDown.style.display = "none"
 	var cardHolder = document.createElement("div") 
 	cardHolder.setAttribute("class", "renCards")
@@ -783,6 +973,7 @@ function doubleDown(){
 	cardHolder.style.fontSize = '23px'
 	cardHolder.style.textAlign = 'center'
 	card = deck.pop()
+	
 	if(card.Suit == "hearts" || card.Suit =="diamonds"){
 			cardHolder.style.background = "red"
 			cardHolder.style.color = "white"
@@ -790,6 +981,7 @@ function doubleDown(){
 			cardHolder.style.background = "black"
 			cardHolder.style.color = "white"
 	}
+	
 	countDeck(card)
 	deckCount.innerHTML = deck.length + " cards left"
 	cardHolder.innerHTML = card.Value + card.Suit
@@ -798,9 +990,13 @@ function doubleDown(){
 	playerCards.appendChild(cardHolder)
 	
 	if(players[1].score > 21){
-	checkForBust()
+		
+		playerBustCheck()
+	
 	}else{
-	stay()
+	
+		stay()
+	
 	}
 
 }
@@ -810,55 +1006,13 @@ function blackjack(){
 	if(players[1].score == 21 && players[0].score == 21){
 		checkForPush()
 		showDealerCards()
-
-		start.style.display = "none"
-		playerPoints2.style.display = "none"
-		secondHand.style.display = "none"
-		hitPlr2.style.display = "none"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		plrStay2.style.display = "none"
-		dblDown.style.display = "none"
-		dealCards.style.display = "block"
-		splitP.style.display = "none"
-		dblDown2.style.display = "none"
+		gameResetWithDeal()
 
 	}else if(players[1].score == 21){
-
-		console.log(playerWin)
 		
-		playerWin++
-		playerWins.innerHTML = playerWin
+		playerVic()
 
-		console.log(playerWin)
-		
-		if(winCounter > 0){
-			
-			winCounter++
-			winStreak.innerHTML = winCounter
-		
-		}else if(winCounter == 0){
-			
-			winCounter++
-			winStreak.innerHTML = winCounter
-		
-		}else{
-
-			winCounter = 0
-			winStreak.innerHTML = winCounter
-		}
-
-		start.style.display = "none"
-		playerPoints2.style.display = "none"
-		secondHand.style.display = "none"
-		hitPlr2.style.display = "none"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		plrStay2.style.display = "none"
-		dblDown.style.display = "none"
-		dealCards.style.display = "block"
-		splitP.style.display = "none"
-		dblDown2.style.display = "none"
+		gameResetWithDeal()
 		
 		message.innerHTML = "Shit.  That won't keep up.  I hope."
 	
@@ -866,37 +1020,10 @@ function blackjack(){
 
 		showDealerCards()
 
-		playerWin--
-		playerWins.innerHTML = playerWin
-		
-		if(winCounter > 0){
-			
-			winCounter = 0
-			winStreak.innerHTML = winCounter
-		
-		}else if(winCounter == 0){
-			
-			winCounter--
-			winStreak.innerHTML = winCounter
-		
-		}else{
+		playerLoses()
 
-			winCounter--
-			winStreak.innerHTML = winCounter
-		}
-
-		dealerPoints.innerHTML = players[0].score
-		start.style.display = "none"
-		playerPoints2.style.display = "none"
-		secondHand.style.display = "none"
-		hitPlr2.style.display = "none"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		plrStay2.style.display = "none"
-		dblDown.style.display = "none"
-		dealCards.style.display = "block"
-		splitP.style.display = "none"
-		dblDown2.style.display = "none"
+		gameResetWithDeal()
+		
 		message.innerHTML = "Yeah boy!  How's my blackjack taste?"
 	
 	}else {
@@ -930,34 +1057,10 @@ function showDealerCards(){
 function dealerBustCheck(){
 
 	if(players[0].score > 21 && players[1].score < 22){
-
-		dealCards.style.display = "block"
-		hitPlr.style.display = "none"
-		plrStay.style.display = "none"
-		dblDown.style.display = "none"
-		splitP.style.display = "none"
-		hitPlr2.style.display = "none"
-		plrStay2.style.display = "none"
-		dblDown2.style.display = "none"
-		splitP.style.display = "none"
-		playerWin++
 		
-		if(winCounter > 0){
-			
-			winCounter++
-		
-		}else if(winCounter == 0){
-			
-			winCounter++
-		
-		}else{
-
-			winCounter = 0
-		}
-		
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
+		playerVic()
 		message.innerHTML = "God Dam it!"
+		gameResetWithDeal()
 
 	}
 }
@@ -965,52 +1068,18 @@ function dealerBustCheck(){
 function playerBustCheck(){
 
 	if(players[1].score > 21){
-		playerWin--
-			
-		if(winCounter > 0){
-			
-			winCounter = 0
 		
-		}else if(winCounter == 0){
-			
-			winCounter--
-		
-		}else{
-
-			winCounter--
-		}
-
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
+		playerLoses()
 
 		if(players[1].score2 > 0 && players[1].score2 < 22){
 
-			dealCards.style.display = "none"
-			hitPlr2.style.display = "block"
-			plrStay2.style.display = "block"
-			dblDown2.style.display = "block"
-			hitPlr.style.display = "none"
-			plrStay.style.display = "none"
-			dblDown.style.display = "none"
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
+			buttonsForSplit()
 			message.innerHTML = "Looks like you broke like the spineless coward you are on hand 1, pal." + " You have " + players[1].score2 + " " + "on hand 2. What are you gonna do?"
-
-
 
 		}else{
 
 			showDealerCards()
-
-			dealCards.style.display = "block"
-			hitPlr2.style.display = "none"
-			plrStay2.style.display = "none"
-			dblDown2.style.display = "none"
-			hitPlr.style.display = "none"
-			plrStay.style.display = "none"
-			dblDown.style.display = "none"
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
+			gameResetWithDeal()
 			message.innerHTML = "You didn't pull the miracle card outta your ass this time, pal"
 
 
@@ -1021,106 +1090,44 @@ function playerBustCheck(){
 function playerHand2Check(){
 
 	if(players[1].score2 > 21){
-		playerWin--
-			
-		if(winCounter > 0){
-			
-			winCounter = 0
 		
-		}else if(winCounter == 0){
-			
-			winCounter--
-		
-		}else{
-
-			winCounter--
-		}
-
-		winStreak.innerHTML = winCounter
-		playerWins.innerHTML = playerWin
+		playerVic2()
 		message.innerHTML = "The game is 21, not " + players[1].score2 + "."
 
 		if(players[1].score < 22){
+			
 			hitDealer()
-			dealCards.style.display = "block"
-			hitPlr2.style.display = "none"
-			plrStay2.style.display = "none"
-			dblDown2.style.display = "none"
-			hitPlr.style.display = "none"
-			plrStay.style.display = "none"
-			dblDown.style.display = "none"
 		
 		}else{
 
-			dealCards.style.display = "block"
-			hitPlr2.style.display = "none"
-			plrStay2.style.display = "none"
-			dblDown2.style.display = "none"
-			hitPlr.style.display = "none"
-			plrStay.style.display = "none"
-			dblDown.style.display = "none"
+			showDealerCards()
+			gameResetWithDeal()
 		}
 
-	}else{
-
-		playerPoints2.innerHTML = players[1].score2
 	}
 
 }
 
 
 function checkForWinner(){
-	dealCards.style.display = "block"
-	hitPlr.style.display = "none"
-	plrStay.style.display = "none"
-	dblDown.style.display = "none"
 
 	if(players[0].score < 22 && players[1].score < 22){
 		if(players[0].score > players[1].score){
-			playerWin--
 			
-			if(winCounter > 0){
-			
-				winCounter = 0
-		
-			}else if(winCounter == 0){
-			
-				winCounter--
-		
-			}else{
-
-				winCounter--
-			}
-
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
-			playerWins.innerHTML = playerWin
+			playerLoses()
 			message.innerHTML = "I'll take this one, thanks."
+			gameResetWithDeal()
 		
 		}else if(players[0].score < players[1].score){
 			
-			playerWin++
-			
-			if(winCounter > 0){
-			
-				winCounter++
-		
-			}else if(winCounter == 0){
-			
-				winCounter++
-		
-			}else{
-
-				winCounter = 0
-			}
-
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
-			playerWins.innerHTML = playerWin
+			playerVic()
 			message.innerHTML = "I'll give you this one cause I don't want you to quit me."
+			gameResetWithDeal()
 		
 		}else{
+			
 			checkForPush()
+			gameResetWithDeal()
 		}
 
 	}
@@ -1129,66 +1136,25 @@ function checkForWinner(){
 }
 
 function checkForWinnerSplit(){
-	dealCards.style.display = "block"
-	hitPlr.style.display = "none"
-	hitPlr2.style.display = "none"
-	plrStay.style.display = "none"
-	plrStay2.style.display = "none"
-	dblDown.style.display = "none"
-	dblDown2.style.display = "none"
 
 	if(players[1].score2 > 0 && players[1].score2 < 22){
 
 		if(players[0].score > players[1].score2){
 			
-			playerWin--
-			
-			if(winCounter > 0){
-			
-			winCounter = 0
-		
-			}else if(winCounter == 0){
-			
-				winCounter--
-		
-			}else{
-
-				winCounter--
-			}
-
-			
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
-			playerWins.innerHTML = playerWin
+			playerLoses2()
 			message.innerHTML = "Looks like Big Al is gonna take this one."
 
 		}else if(players[0].score < players[1].score2){
 
-			playerWin++
-			
-			if(winCounter > 0){
-			
-			winCounter++
-		
-			}else if(winCounter == 0){
-			
-				winCounter++
-		
-			}else{
-
-				winCounter = 0
-			}
-
-			winStreak.innerHTML = winCounter
-			playerWins.innerHTML = playerWin
-			playerWins.innerHTML = playerWin
+			playerVic2()
 			message.innerHTML = "You keep splitting those hands and see if you keep winning.  Idiot."
-
+		
 		}else{
 
 			checkForPush2()
 		}
 	}
+	gameResetWithDeal()
 }
 	
 
@@ -1236,7 +1202,7 @@ function splitCards(){
 	}else{
 			newHand.style.background = "black"
 			newHand.style.color = "white"
-		}
+	}
 	splitHandScore()
 
 	playerPoints2.innerHTML = players[1].score2
