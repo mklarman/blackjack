@@ -1,6 +1,10 @@
 
 var cards = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 var suits = ["diamonds", "hearts", "spades", "clubs"];
+var winSayings = ["You fuckin' luckbox.", "Even a donkey like you pulls a card outta their ass.", "You're a piece of shit.  I just thought I'd tell you that.", "Fuck me.", "Your mother's a whore.  I ever tell you that?", "What the fuck with this guy.", "Dealer, you give him one more winning hand and I'll cut your nuts off.", "Just promise me you're not leaving.", "Hey now.  No more of that dealer.", "Any idiot can pull cards like that, don't get cocky."]
+var bigAlBreaks = ["Dealer, take that last card and jam it up your mother's ass!", "Cocksucker!!", "I can't believe this shit...", "Fuck me!", "Get the fuck outta here!", "Dealer, I break one more time, I break your face.", "Dealer, would you rather walk in on your wife blowin' some guy or gettin' pounded from the back?", "How many bricks in this fuckin' deck??", "I can't stand losing to a piece of shit like you", "What the hell is goin' on today?"]
+var bigAlWins = ["Losing should feel natural for you by now.", "You can't beat me punk.", "I'm gonna bust you up all day long, pal", "You're my bitch, bitch.", "Playing me in blackjack is like playing you in cocksucking", "You think I'm gonna lose to somebody like you?  You know who the fuck I am?", "I'm Big fuckin' Al, I eat pussies like you for lunch", "Losers lose.", "Boy, your asshole can take lots of punishment", "I pull cards outta the air like this all day long.", "You got any pictures of your wife?  Maybe me and her could play a few games, know what I mean?"]
+var playerBreaks = ["You should build your wife a new house with all those bricks you got there, I'll take care of laying the pipe.", "I don't even have to hit when a mush like you is in the chair.", "You're as good as Rain Man's idiot cousin in this game.", "What are your likes on your online dating profile?  Blackjack and takin it in the ass from Big Al?", "This is like stealing from the blind.  But I'm ok with it.", "You really like that hit button, huh?  I can get you one for the house."]
 var deck = []
 var players = []
 var counter = 0
@@ -243,7 +247,7 @@ function buttonsForSplit(){
 }
 
 function shuffle(){
-	counter = 0
+	
 	
 	for (var i = 0; i < 3000; i++){
 		
@@ -254,6 +258,7 @@ function shuffle(){
 		deck[location1] = deck[location2];
 		deck[location2] = tmp;
 	}
+	counter = 0
 	
 }
 
@@ -300,18 +305,26 @@ function deal(){
 
 	if(winCounter > 2){
 		
+		message.style.backgroundColor = "orange"
+		message.style.color = "red"
 		document.body.style.backgroundColor = "red";
 		blinking()
 		hotStreak()
 	
 	}else if(winCounter < -2){
 		
+		winStreak.style.backgroundColor = "blue"
+		message.style.backgroundColor = "darkblue"
+		message.style.color = "blue"
 		document.body.style.backgroundColor = "lightblue";
 		blinkingCold()
 		coldStreak()
 	
 	}else{
 
+		winStreak.style.backgroundColor = "lightgreen"
+		message.style.backgroundColor = "white"
+		message.style.color = "black"
 		document.body.style.backgroundColor = "green";
 		card1 = deck.pop()
 		card2 = deck.pop()
@@ -789,17 +802,15 @@ function hitDealer(){
 
 function dealerBustV2(){
 
-	if(players[0].score > 21 ){
-		if(players[1].score2 > 0 && players[1].score2 < 22){
+	if(players[1].score2 > 0 && players[1].score2 < 22){
 
-			playerVic2()
-			message.innerHTML = "God Dam it!"
+		playerVic2()
+		message.innerHTML = bigAlBreaks[Math.floor(Math.random() * (bigAlBreaks.length - 1))]
 
 
-		}
 	}
-
 }
+
 	
 
 function stay(){
@@ -1008,7 +1019,7 @@ function blackjack(){
 
 		getReadyForDeal()
 		
-		message.innerHTML = "Shit.  That won't keep up.  I hope."
+		message.innerHTML = winSayings[Math.floor(Math.random() * (winSayings.length -1))]
 	
 	}else if(players[0].score == 21){
 
@@ -1053,7 +1064,7 @@ function dealerBustCheck(){
 	if(players[0].score > 21 && players[1].score < 22){
 		
 		playerVic()
-		message.innerHTML = "God Dam it!"
+		message.innerHTML = bigAlBreaks[Math.floor(Math.random() * (bigAlBreaks.length - 1))]
 		getReadyForDeal()
 
 	}
@@ -1073,7 +1084,7 @@ function playerBustCheck(){
 		}else{
 
 			showDealerCards()
-			message.innerHTML = "You didn't pull the miracle card outta your ass this time, pal"
+			message.innerHTML = playerBreaks[Math.floor(Math.random() * (playerBreaks.length - 1))]
 			getReadyForDeal()
 
 
@@ -1085,8 +1096,8 @@ function playerHand2Check(){
 
 	if(players[1].score2 > 21){
 		
-		playerVic2()
-		message.innerHTML = "The game is 21, not " + players[1].score2 + "."
+		playerLoses2()
+		message.innerHTML = playerBreaks[Math.floor(Math.random() * (playerBreaks.length - 1))]
 
 		if(players[1].score < 22){
 			
@@ -1110,12 +1121,12 @@ function checkForWinner(){
 		if(players[0].score > players[1].score){
 			
 			playerLoses()
-			message.innerHTML = "I'll take this one, thanks."
+			message.innerHTML = bigAlWins[Math.floor(Math.random() * (bigAlWins.length - 1))]
 		
 		}else if(players[0].score < players[1].score){
 			
 			playerVic()
-			message.innerHTML = "I'll give you this one cause I don't want you to quit me."
+			message.innerHTML = winSayings[Math.floor(Math.random() * (winSayings.length -1))]
 		
 		}else{
 			
@@ -1135,7 +1146,7 @@ function checkForWinnerSplit(){
 		if(players[0].score > players[1].score2){
 			
 			playerLoses2()
-			message.innerHTML = "Looks like Big Al is gonna take this one."
+			message.innerHTML = bigAlWins[Math.floor(Math.random() * (bigAlWins.length - 1))]
 
 		}else if(players[0].score < players[1].score2){
 
@@ -1351,8 +1362,6 @@ function blinkingCold(){
 	blink_message.style.fontSize = "30px"
 	blink_message.style.textAlign = "center"
 	blink_message.style.color = "blue"
-	blink_message.style.margin = "auto"
-	message.innerHTML = " "
 	blink_message.innerHTML = "You're ice cold!!!"
 
 
@@ -1363,7 +1372,7 @@ function blinkingCold(){
 }
 
 function blinkMess(){
-	var blink_speed = 500;
+	var blink_speed = 2000;
 	var t = setInterval(function () {
 	     blink_message.style.visibility = (blink_message.style.visibility == 'hidden' ? '' : 'hidden');
 	}, blink_speed);
